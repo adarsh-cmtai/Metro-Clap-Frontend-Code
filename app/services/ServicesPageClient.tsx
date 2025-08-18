@@ -61,8 +61,16 @@ const ServiceModal = ({ service, isOpen, onClose, onAddToCart }: { service: Serv
                     {service.subServices && service.subServices.length > 0 && (
                         <div>
                             <h3 className="font-semibold mb-3 text-lg">Select Service Type</h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                {service.subServices.map(option => (<button key={option._id} onClick={() => setSelectedSubService(option)} className={`p-3 border rounded-lg text-base transition-all duration-200 text-center ${selectedSubService?._id === option._id ? 'border-red-500 bg-red-50 text-red-600 font-bold ring-2 ring-red-300' : 'border-gray-300 hover:border-red-400 hover:bg-gray-50'}`}> {option.name} </button>))}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {service.subServices.map(option => (
+                                    <button key={option._id} onClick={() => setSelectedSubService(option)} className={`border rounded-lg text-left transition-all duration-200 ${selectedSubService?._id === option._id ? 'border-red-500 bg-red-50 ring-2 ring-red-300' : 'border-gray-300 hover:border-red-400 hover:bg-gray-50'}`}>
+                                        <img src={option.imageUrl || service.imageUrl || 'https://i.imgur.com/gSNoY2j.png'} alt={option.name} className="w-full h-32 object-cover rounded-t-lg" />
+                                        <div className="p-3">
+                                            <p className="font-bold text-gray-800">{option.name}</p>
+                                            <p className="font-semibold text-red-600">₹{option.price}</p>
+                                        </div>
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     )}
