@@ -1,208 +1,313 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
+
+// Ícono SVG para las listas
+const CheckCircleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 20 20"
+    fill="currentColor"
+    className="h-5 w-5 flex-shrink-0 text-blue-600"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+      clipRule="evenodd"
+    />
+  </svg>
+)
+
+type ContentMap = Record<string, string[]>;
+
+const fullContent: ContentMap = {
+  "1. SERVICES": [
+    "(a) The Services include the provision of the Platform that enables you to arrange and schedule different home-based services with independent third party service providers of those services ('Service Professionals'). As a part of the Services, Metroclap facilitates the transfer of payments to Service Professionals for the services they render to you and collects payments on behalf of such Service Professionals.",
+    "(b) The services rendered by Service Professionals are referred to as 'Pro Services'. The term 'Services' does not include the Pro Services. Metroclap does not provide the Pro Services and is not responsible for their provision. Service Professionals are solely liable and responsible for the Pro Services that they offer or otherwise provide through the Platform. Metroclap and its affiliates do not employ Service Professionals, nor are Service Professionals agents, contractors, or partners of Metroclap or its affiliates. Service Professionals do not have the ability to bind or represent Metroclap.",
+    "(c) The Platform is for your personal and non-commercial use only, unless otherwise agreed upon in accordance with the terms of a separate agreement. Please note that the Platform is intended for use only within India. You agree that in the event you avail the Services or Pro Services from a legal jurisdiction other than the territory of India, you will be deemed to have accepted the Metroclap terms and conditions applicable to that jurisdiction.",
+    "(d) The Services are made available under various brands owned by or otherwise licensed to Metroclap and its affiliates.",
+    "(e) A key part of the Services is Metroclap's ability to send you text messages, electronic mails, or WhatsApp messages, including in connection with your bookings, your utilisation of the Services, or as a part of its promotional and marketing strategies. While you may opt out of receiving these text messages by contacting UC at privacy@metroclap.in or through the in-Platform settings, you agree and acknowledge that this may impact Metroclap's ability to provide the Services (or a part of the Services) to you.",
+    "(f) In certain instances, you may be required to furnish identification proof to avail the Services or the Pro Services, and hereby agree to do so. A failure to comply with this request may result in your inability to use the Services or Pro Services.",
+    "(g) Metroclap Credits:",
+    "  a) Metroclap may, in its sole discretion, offer promotional codes that may be redeemed for credits, other features or benefits related to the Services, and/or Pro Services, subject to any additional terms that may apply on a promotional code ('Metroclap Credits').",
+    "  b) You agree that you shall use Metroclap Credits in a lawful manner, and only for the purposes specified by such Metroclap Credits, (ii) you shall not duplicate, sell, or transfer the Metroclap Credits in any manner (including by posting such codes on a public forum) unless you have Metroclap's express prior consent to do so, (iii) Metroclap Credits may be disabled by Metroclap at any time for any reason without any liability to you, (iv) Metroclap Credits are not valid for cash, and (v) Metroclap Credits may expire prior to your use.",
+    "  c) Metroclap may, at its sole discretion, provide only certain users with Metroclap Credits that may result in different amounts charged for the same or similar services obtained by other users.",
+    "  d) Metroclap reserves the right to withhold or deduct credits or other features or benefits obtained through the use of Metroclap Credits, by you or any other user, if Metroclap reasonably determines or believes that the use or redemption of the Metroclap Credits was in error, fraudulent, illegal, or in violation of the applicable uc credit terms.",
+  ],
+  "2. ACCOUNT CREATION": [
+    "(a) To avail the Services, you will be required to create an account on the Platform ('Account'). For this Account, you may be required to furnish certain details, including but not limited to your phone number. To create an Account, you must be at least 18 years of age.",
+    "(b) You warrant that all information furnished in connection with your Account is and shall remain accurate and true. You agree to promptly update your details on the Platform in the event of any change to or modification of this information.",
+    "(c) You are solely responsible for maintaining the security and confidentiality of your Account and agree to immediately notify us of any disclosure or unauthorised use of your Account or any other breach of security with respect to your Account.",
+    "(d) You are liable and accountable for all activities that take place through your Account, including activities performed by persons other than you. We shall not be liable for any unauthorised access to your Account.",
+    "(e) You agree to receive communications from us regarding (i) requests for payments, (ii) information about us and the Services, (iii) promotional offers and services from us and our third party partners, and (iv) any other matter in relation to the Services.",
+  ],
+  "3. USER CONTENT": [
+    "(a) Our Platform may contain interactive features or services that allow users who have created an account with us to post, upload, publish, display, transmit or submit comments, reviews, suggestions, feedback ideas or other content on or through the Platform ('User Content').",
+    "(b) As part of the effective provision of the Services and quality control purposes, we may request reviews from you about Service Professionals and you agree and acknowledge that Service Professionals may provide reviews about you to us. You must not knowingly provide false, inaccurate, or misleading information in respect of the reviews. Reviews will be used by us for quality control purposes and to determine whether Customers and Service Professionals are appropriate users of the Platform. If we determine at our sole discretion that you are not an appropriate user, we reserve the right to cancel your registration and remove you from our Platform.",
+    "(c) You grant us a non-exclusive, worldwide, perpetual, irrevocable, transferable, sublicensable, and royalty-free licence to transfer, process, communicate, distribute, make available, modify, adapt, translate, and create derivative works of, the User Content, for the functioning of, and in connection with, the Services and (ii) use User Content for the limited purposes of advertising and promoting the Services, or furnishing evidence before a court or authority of competent jurisdiction under applicable laws.",
+    "(d) In connection with these Terms and the licences granted under this clause, you hereby waive any claims arising out of any moral rights or other similar rights relating to the User Content.",
+    "(e) You agree and acknowledge that Metroclap may, without notice to you, remove, or otherwise restrict access to User Content that, in its sole discretion, violates these Terms.",
+  ],
+  "4. CONSENT TO USE DATA": [
+    "(a) You agree that we may, in accordance with our Privacy Policy, collect and use your personal data. The Privacy Policy is available at https://www.metroclap.in/privacy-policy and it explains the categories of personal data that we collect or otherwise process about you and the manner in which we process such data.",
+    "(b) In addition to any consent you may provide pursuant to the Privacy Policy, you hereby consent to us sharing your information with our affiliates or other third-party service providers. We may use information and data pertaining to your use of the Services for provision of the Services, analytics, trend identification, and purposes of statistics to further enhance the effectiveness and efficiency of our Services, and provision of beneficial schemes, new offers, and for experience enhancement.",
+    "(c) Subject to applicable laws, we may be directed by law enforcement agencies or the government and related bodies to disclose data in relation to you in connection with criminal or civil proceedings. You understand and agree that in such instances we shall have the right to share such data with relevant agencies or bodies.",
+  ],
+  "5. BOOKINGS": [
+    "(a) Orders: The Platform permits you to request various Pro Services at a time of your choosing based on available slots. To make a booking, you should follow the instructions on the Platform and provide necessary information. We use reasonable efforts to enable you to find a Service Professional who is able to provide that service at the requested time. In the unlikely event we cannot find a Service professional for the specific timeslot, we will contact you to find an alternative time.",
+    "(b) Confirmation: Once you place a request we will provide confirmation of the booking via SMS, email or a push notification. Once your booking has been confirmed you will be required to make the payment in accordance with these Terms or as indicated on the Platform. Once a Service Professional has been identified for the requested Pro Services, you shall receive confirmation in App or via SMS, email or a push notification.",
+    "(c) Cancellations: Bookings that are cancelled before confirmation on the Platform will not be charged. Metroclap's cancellation policy sets out applicable cancellation fees.",
+    "(d) Substitutions: In case of the unavailability of or cancellation by a selected Service Professional we will offer you a substitute of the Service Professional from among our registered Service Professionals.",
+  ],
+  "6. PRICING, FEES, AND PAYMENT TERMS": [
+    "(a) Metroclap reserves the right to charge you for the different Services you may avail and/or for any other facilities you may opt for, from time to time, on or via the Platform.",
+    "(b) Charges and Fees in respect of Pro Services:",
+    "  1) In respect of Pro Services that you seek to avail through the Platform, you shall be required to pay Service Professionals the amount indicated at the time of booking as well as amounts towards (a) any additional Pro Services you may avail, (b) out of pocket expenses incurred by the Service Professional, and (c) expenses arising out of the purchase of goods required or utilised for the performance of the Pro Service ('Charges'). In addition to the Charges payable to Service Professionals, Metroclap reserves the right to charge you a convenience fee for facilitating the booking and transferring payments to the Service Professional (this fee is referred to as 'Fees'). You acknowledge that the final bill you receive may include additional charges, including without limitation, a safety fee, warranty fee, insurance fee, or Service Professional welfare fee.",
+    "  2) Metroclap shall notify you of the applicable Charges, Fees, and payment methods at the time of booking. Generally, you may make payments for Pro Services through credit cards, debit cards, net banking, wallets, UPI or cash upon completion of the Pro Service. We have the right to modify and otherwise restrict the modes of payment available to you. You acknowledge that certain payment methods such as cash upon completion may not always be available to you as a payment method. For the avoidance of doubt, in the event you pay through the method of cash upon completion, you acknowledge that you will be required to pay both Charges and Fees to the Service Professional.",
+    "  3) The Charges and Fees may be payable at the time of making a booking, or upon the completion of the Pro Service, as specified by Metroclap.",
+    "  4) For the avoidance of doubt, please note that the Charges are payable to Service Professionals, and Metroclap acts as a limited collection agent on behalf of such Service Professionals to collect and transfer amounts due to them.",
+    "  5) Taxes: All Charges and Fees are inclusive of applicable taxes.",
+    "  6) Metroclap reserves the right to reasonably amend the Charges and Fees at any time at its sole discretion. A change in Fees shall not impact any bookings that have been confirmed before the publication of the revised Fees on the Platform.",
+    "  7) Charges and Fees that you pay are final and non-refundable, unless otherwise determined by Metroclap or required by the applicable laws. Under certain laws, you may be entitled to a refund or other remedies for a failure in the provision of the Services.",
+    "  8) You acknowledge and agree that Charges and Fees applicable in certain geographical areas may increase substantially during times of high demand. Metroclap will use reasonable efforts to inform you of the Charges and Fees that may apply. However, by using the Pro Services or Services, you will be responsible for the Charges and Fees incurred under your Account regardless of your awareness of such Charges or Fees.",
+    "(c) Payment Processors: We may use a third-party payment processor ('Payment Processor') to bill you through your selected mode of payment. The processing of payments will be subject to the terms and policies of such Payment Processor in addition to these Terms. We shall not be liable for any error of the Payment Processor. In the event of any unsuccessful payment, the money debited shall be credited in accordance with the terms of the Payment Processor.",
+    "(d) Cancellation: You may elect to cancel your request for services from a Service Professional at any time prior to such Service Professional's arrival, in which case you may be charged a cancellation fee in accordance with UC's cancellation policy. UC reserves the right to charge you, or otherwise deduct applicable taxes in respect of such cancellation fee.",
+    "(e) Subscriptions: Metroclap may from time to time offer subscription packages (howsoever named) for monetary consideration. The packages shall provide Customers with additional benefits, which may include the ability to avail discounted Pro Services. You agree that subscription packages (howsoever named) shall be subject to additional terms and conditions. You acknowledge that such subscription packages will be subject to additional terms and conditions that will be deemed to be an integral part of these Terms.",
+    "(f) Metroclap does not designate any portion of your payment as a tip or gratuity to the Service Professional. Any representation by Metroclap to the effect that tipping is 'voluntary,' 'not required', and/or 'included' in the payments you make for Pro Services is not intended to suggest that Metroclap provides any additional payments to Service Professionals. You understand and agree that while you are free to provide additional payment as a gratuity to any Service Professional who provides you with Pro Services, you are under no obligation to do so. Gratuities are voluntary.",
+  ],
+  "7. CUSTOMER CONDUCT": [
+    "(a) Metroclap prohibits discrimination against Service Professionals, including on the basis of race, religion, caste, national origin, disability, sexual orientation, sex, marital status, gender identity, age, or any other characteristic that may be protected under applicable law. Such discrimination includes but is not limited to any refusal to accept Pro Services based on any of these characteristics.",
+    "(b) We request that you treat all Service Professionals with courtesy and respect, and that you provide them with a safe, clean, and appropriate location to perform the Pro Services. Service Professionals shall be entitled to refuse to perform Pro Services if you have not provided a safe, clean, and appropriate location for them, or you behave towards them in a manner which is discourteous, disrespectful, abusive, or otherwise inappropriate. We reserve the right to withhold access to the Services and otherwise limit your access to Pro Services at our absolute discretion if you behave towards any Service Professional in a manner which is discourteous, disrespectful, or abusive, or which we otherwise deem to be inappropriate or unlawful.",
+    "(c) You agree that you will be liable for discriminating against Service Professionals or for any failure, intentional or otherwise, to provide the Service Professionals a safe, clean, and appropriate location for them to perform the Pro Services. Additionally, you will also disclose any and all information that may have a bearing on the ability of the Service Professional to perform the Pro Services or impact the Services Professional's health, safety, or well-being to UC and the Service Professional.",
+    "(d) You agree that in the event a Service Professional behaves in a manner that is discourteous, disrespectful, abusive, inappropriate, or in violation of the law, you shall be required to report such incident to grievanceofficer@metroclap.in at the earliest but in any event within 48 (forty eight) hours of such incident.",
+  ],
+  "8. THIRD PARTY SERVICES": [
+    "(a) The Platform may include services, content, documents, and information owned by, licensed to, or otherwise made available by, a third party ('Third Party Services') and contain links to Third Party Services. You understand and acknowledge that Third Party Services are the sole responsibility of the third party that created or provided it and that use of such Third Party Services is solely at your own risk.",
+    "(b) We make no representations and exclude all warranties and liabilities arising out of or pertaining to such Third Party Services, including their accuracy or completeness. Should you avail a Third Party Service, you shall be governed and bound by the terms and conditions and privacy policy of the third parties providing the Third Party Services. Further, all intellectual property rights in and to Third Party Services are the property of the respective third parties.",
+  ],
+  "9. YOUR RESPONSIBILITIES": [
+    "(a) You represent and warrant that all information that you provide in relation to the Services and Pro Services is complete, true, and correct on the date of agreeing to these Terms and shall continue to be complete, true, and correct while you avail the Services and/or the Pro Services. Should any information that you provide change during the existence of these Terms, you undertake to immediately bring such change to our notice. We do not accept any responsibility or liability for any loss or damage that you may suffer or incur if any information, documentation, material, or data, provided to avail the Services is incorrect, incomplete, inaccurate, or misleading or if you fail to disclose any material fact.",
+    "(b) You shall extend all cooperation to us in our defence of any proceedings that may be initiated against us due to a breach of your obligations or covenants under these Terms.",
+    "(c) In respect of the User Content, you represent and warrant that:",
+    "  I. you own all intellectual property rights (or have obtained all necessary permissions) to provide User Content and to grant the licences under these Terms;",
+    "  II. you are solely responsible for all activities that occur on or through your account on the Platform and all User Content;",
+    "  III. the User Content does not and shall not violate any of your obligations or responsibilities under other agreements;",
+    "  IV. the User Content does not and shall not violate, infringe, or misappropriate any intellectual property right or other proprietary right including the right of publicity or privacy of any person or entity;",
+    "  V. the User Content does not and shall not contain any viruses, corrupted data, or other harmful, disruptive, or destructive files or content;",
+    "  VI. the User Content does not and shall not violate any third-party rights; and",
+    "  VII. the User Content (A) does not belong to any other person to which you do not have any right, (B) does not threaten the unity, integrity, defence, security or sovereignty of India, friendly relations with foreign states, public order, cause incitement to the commission of any cognisable offence, prevents investigation of any offence, or is insulting another nation, (C) is not defamatory, grossly harmful, blasphemous, paedophilic, invasive of another's privacy, discriminatory based on gender, ethnically objectionable, disparaging, relating to, or encouraging money laundering or gambling libellous, hateful, racist, violent, obscene, pornographic, unlawful, harmful to children, or (D) otherwise offensive, objectionable, or restricts, or inhibits, any other person from using or enjoying the Services.",
+    "(d) You shall not use the Services in any manner except as expressly permitted in these Terms. Without limiting the generality of the preceding sentence, you shall not:",
+    "  (i) infringe any proprietary rights, including but not limited to copyrights, patents, trademarks, or trade secrets of any party;",
+    "  (ii) except as may be provided hereunder, copy, display, distribute, modify, publish, reproduce, store, transmit, post, translate, create any derivative works from or license the Services;",
+    "  (iii) use the Services to transmit any data, or send or upload any material that contains viruses, Trojan horses, worms, timebombs, keystroke loggers, spyware, adware, or any other harmful programmes, or similar computer code, designed to adversely affect the operation of any computer software or hardware;",
+    "  (iv) use any robot, spider, other automated device, or manual process to monitor or copy the Services or any portion thereof;",
+    "  (v) engage in the systematic retrieval of content from the Services to create or compile, directly or indirectly, a collection, compilation, database or directory;",
+    "  (vi) use the Services in (A) any unlawful manner, (B) for fraudulent or malicious activities, or (C) in any manner inconsistent with these Terms;",
+    "  (vii) decompile, reverse engineer, or disassemble the Services;",
+    "  (viii) link to, mirror, or frame, any portion of all or any of the Services; or",
+    "  (ix) violate applicable laws in any manner.",
+    "(e) You warrant that you shall not engage in any activity that interferes with or disrupts the Services.",
+    "(f) You shall not attempt to gain unauthorised access to any portion or feature of the Services, any other systems or networks connected to the Services, to any of our servers, or through the Platform by hacking, password mining, or any other illegitimate means.",
+    "(g) You shall not directly or indirectly, in any capacity, solicit, attempt to influence, engage, approach, or accept or encourage the solicitations or approach of a Service Professional from whom you have availed Pro Services, to either terminate or otherwise cease their registration on or engagement with the Platform, or avail services the same as or similar to the Pro Services independently, without booking the Pro Services through your Account. You agree that this limitation is reasonable and fair and is necessary for the protection of the privacy and security of Service Professionals and that this will not preclude you from obtaining services the same as or similar to the Pro Services through the Platform or other means. You further agree that any potential harm to Service Professionals from the non-enforcement of this clause far outweighs any potential harm to you.",
+  ],
+  "10. OUR INTELLECTUAL PROPERTY": [
+    "(a) All rights, titles, and interest in, and to the Services, including all intellectual property rights arising out of the Services are owned by or otherwise licensed to us. Subject to compliance with these Terms, we grant you a non-exclusive, non-transferable, non-sub licensable, revocable, and limited licence to use the Services in accordance with these Terms and our written instructions issued from time to time. Any rights not expressly granted herein are reserved by Metroclap or Metroclap's licensors.",
+    "(b) We may request you to submit suggestions and other feedback, including bug reports, relating to the Services from time to time ('Feedback'). We may freely use, copy, disclose, publish, display, distribute, and exploit the Feedback we receive from you without any payment of royalty, acknowledgement, prior consent, or any other form of restriction arising out of your intellectual property rights.",
+    "(c) Except as expressly stated in these Terms, nothing in these Terms should be construed as conferring any right in or licence to our or any third party's intellectual property rights.",
+  ],
+  "11. TERM AND TERMINATION": [
+    "(a) These Terms shall remain in effect unless terminated in accordance with the terms hereunder.",
+    "(b) We may restrict, deactivate, or terminate your access to, or use of, the Services, or any portion thereof, (i) immediately and at any point at our sole discretion, (A) if you violate or breach any of the obligations, responsibilities, or covenants under these Terms, (B) when you cease to become a user of our Services, (C) you do not, or are likely not to qualify under applicable law, or the standards and policies of Metroclap or its affiliates, to access and use the Services, or (D) violate or breach the Community Guidelines, (ii) upon 30 (Thirty) days prior written notice to you, or (iii) immediately for any legitimate business, legal, or regulatory reason.",
+    "(c) You may terminate these Terms, at any time, for any reason by sending a notice to Metroclap at privacy@metroclap.in.",
+    "(d) Upon termination of these Terms: the Account will expire; the Services will 'time-out'; and these Terms shall terminate, except for those clauses that are expressly, or by implication, intended to survive termination or expiry.",
+  ],
+  "12. DISCLAIMERS AND WARRANTIES": [
+    "(a) The Services are provided on an 'as is' basis without warranty of any kind, express, implied, statutory or otherwise, including without limitation the implied warranties of title, noninfringement, merchantability, or fitness for a particular purpose. Without limiting the foregoing, we make no warranty that the Services will meet your requirements or expectations.",
+    "(b) No advice or information, whether oral or written, obtained by you from us shall create any warranty that is not expressly stated in the Terms.",
+    "(c) While Metroclap strives to provide accurate information about Pro Services and Charges, pricing errors may occur from time to time.",
+    "(d) You agree and acknowledge that we are merely a Platform that connects you with Service Professionals, and we shall not be liable in any manner for any obligations that have not been explicitly stated in these Terms. We are not liable or responsible for fulfilment of any bookings, for the performance of the Pro Services by any Service Professional, or for any acts or omissions of the Service Professionals during their provision of the Pro Services including any damage they may cause to property. By booking Pro Services through the Platform, you are entering into a contract with the relevant Service Provider for the provision of those services, and we accept no responsibility or liability, nor do we make any warranty, representation, or guarantee in respect of the Service Professional's performance under that contract.",
+    "(e) You agree and acknowledge that soliciting or receiving services from any Service Professional independently is solely at your own risk, and in such an event, you waive any rights that you may have under these Terms.",
+    "(f) We do not guarantee or warrant and we make no representation whatsoever regarding the reliability, quality, or suitability of the Service Professionals.",
+    "(g) You hereby accept full responsibility for any consequences that may arise from your use of the Services and Pro Services, and expressly agree and acknowledge that we shall have absolutely no liability in this regard.",
+    "(h) Metroclap will maintain a complaints management framework and will manage this framework on behalf of Service Professionals in a reasonable manner and in accordance with the non-excludable requirements of relevant applicable laws.",
+    "(i) To the fullest extent permissible by law, we, our affiliates, and our related parties, each disclaim all liability for any loss or damage arising out of, or due to:",
+    "  1. your use of, inability to use, or availability or unavailability of the Services or the Pro Services;",
+    "  2. the occurrence or existence of any defect, interruption, or delays, in the operation or transmission of information to, from, or through the Services, communications failure, theft, destruction, or unauthorised access to our records, programmes, services, servers, or other infrastructure relating to the Services;",
+    "  3. the failure of the Services to remain operational for any period of time; and",
+    "  4. the loss of any User Content and any other data in connection with your use of the Services.",
+    "(j) In no event shall UC, its officers, directors, and employees, or its contractors, agents, licensors, partners, or suppliers, be liable to you for any direct, special, indirect, incidental, consequential, punitive, reliance, or exemplary damages (including without limitation, lost business opportunities, lost revenues or loss of anticipated profits or any other pecuniary or non-pecuniary loss or damage of any nature whatsoever, including but not limited to any abuse or breach of data), even if UC or an authorised representative had been advised of the possibility of such damages arising out of or relating to (A) these Terms, (B) the Services or the Pro Services, (C) your use or inability to use the Services or the Pro Services, or (D) any other interactions with another user of the Services.",
+    "(k) To the maximum extent permitted by law, our liability shall be limited to the amount of commission we receive in respect of a particular booking made on the Platform. In no event shall our total liability to you in connection with these Terms exceed INR 10,000 (Rupees Ten Thousand).",
+    "(l) Nothing in these Terms will exclude or limit any warranty implied by law that it would be unlawful to exclude or limit.",
+  ],
+  "13. INDEMNITY": [
+    "You shall indemnify, defend at our option, and hold us, our parent companies, subsidiaries, affiliates, and our officers, employees, directors, agents, and representatives, harmless from and against any claim, demand, lawsuits, judicial proceeding, losses, liabilities, damages, and costs (including, without limitation, all damages, liabilities, settlements, and attorneys' fees), due to or arising out of your access to the Services or Pro Services, use of the Services or Pro Services, violation of these Terms, or any violation of these Terms by any third party who may use your Account.",
+  ],
+  "14. JURISDICTION, GOVERNING LAWS, AND DISPUTE RESOLUTION": [
+    "(a) These Terms shall be governed by and construed and enforced in accordance with the laws of India. Subject to other provisions in this clause, courts in Pune, Maharashtra shall have exclusive jurisdiction over all issues arising out of these Terms or the use of the Services.",
+    "(b) Any controversies, conflicts, disputes, or differences, arising out of these Terms shall be resolved by arbitration in Pune, Maharashtra in accordance with the Arbitration and Conciliation Act, 1996 for the time being in force, which is deemed to be incorporated by reference in this clause. The tribunal shall consist of 1 (One) arbitrator appointed by Metroclap. The language of the arbitration shall be English. The parties to the arbitration shall keep the arbitration confidential, and not disclose to any person, other than on a need-to-know basis, or to legal advisors, unless required to do so by law. The decision of the arbitrator shall be final and binding on all the parties thereto. Each party to the arbitration shall bear its own costs with respect to any dispute.",
+  ],
+  "15. GRIEVANCE REDRESSAL": [
+    "(a) You may contact our designated Grievance Redressal Officer with any complaints or queries relating to the Services or these Terms through registered post or through email, details of which are provided below:",
+    "  Name: Bapu Tule",
+    "  Email Address: bapu@metroclap.in",
+    "(b) We shall ensure that your complaint is resolved within timelines prescribed by applicable laws.",
+  ],
+  "16. MISCELLANEOUS PROVISIONS": [
+    "(a) Changes to Terms: The Terms are subject to revisions at any time, as determined by us, and all changes are effective immediately upon being posted on the Platform. It is your responsibility to review these Terms periodically for any updates or changes. You will be deemed to have accepted the changes made to these Terms if you continue to use the Platform once it has been posted.",
+    "(b) Modification to the Services: We reserve the right at any time to add, modify, or discontinue, temporarily or permanently, the Services (or any part thereof), with or without cause. We shall not be liable for any such addition, modification, suspension, or discontinuation of the Services.",
+    "(c) Severability: If any provision of these Terms is determined by any court or other competent authority to be unlawful or unenforceable, the other provisions of these Terms will continue to be in effect. If any unlawful or unenforceable provision would be lawful or enforceable if a part of it were deleted, that part will be deemed to be deleted, and the rest of the provision will continue in effect (unless that would contradict the clear intention of the clause, in which case the entirety of the relevant provision will be deemed to be deleted).",
+    "(d) Assignment: You shall not license, sell, transfer, or assign your rights, obligations, or covenants under these Terms, or your Account in any manner without our prior written consent. We may grant or withhold this consent at our sole discretion, subject to any conditions we deem appropriate. We may assign our rights to any of our affiliates, subsidiaries, or parent companies, any successor in interest of any business associated with the Services, or any third party without any prior notice to you.",
+    "(e) Notices: All notices, requests, demands, and determinations for us under these Terms (other than routine operational communications) shall be sent to legal@metroclap.in.",
+    "(f) Third Party Rights: No third party shall have any rights to enforce any terms contained herein.",
+    "(g) Force Majeure: We shall have no liability to you if we are prevented from or delayed in performing our obligations, or from carrying on our business, by acts, events, omissions, or accidents beyond our reasonable control, including without limitation, strikes, failure of a utility service or telecommunications network, act of God, war, riot, civil commotion, malicious damage, or compliance with any law or governmental order, rule, regulation, or direction.",
+  ],
+};
 
 const sections = [
-  {
-    title: "Acceptance of Terms",
-    content: [
-      "By accessing and using MetroClap's services, you accept and agree to be bound by these Terms and Conditions.",
-      "If you do not agree to these terms, please do not use our services.",
-      "We reserve the right to modify these terms at any time, and your continued use constitutes acceptance of any changes.",
-      "These terms apply to all users of our platform, including customers and service providers.",
-    ],
-  },
-  {
-    title: "Description of Services",
-    content: [
-      "MetroClap is a platform that connects customers with professional cleaning service providers.",
-      "We facilitate bookings, payments, and communications between customers and service providers.",
-      "We do not directly provide cleaning services but act as an intermediary platform.",
-      "Service quality and performance are the responsibility of the individual service providers.",
-      "We strive to vet our service providers but cannot guarantee the quality of all services.",
-    ],
-  },
-  {
-    title: "User Accounts",
-    content: [
-      "You must create an account to use our services and provide accurate, current information.",
-      "You are responsible for maintaining the confidentiality of your account credentials.",
-      "You must notify us immediately of any unauthorized use of your account.",
-      "You may not share your account with others or create multiple accounts.",
-      "We reserve the right to suspend or terminate accounts that violate these terms.",
-    ],
-  },
-  {
-    title: "Booking and Payment Terms",
-    content: [
-      "All bookings are subject to availability and confirmation by service providers.",
-      "Prices are clearly displayed and include all applicable fees unless otherwise stated.",
-      "Payment is processed securely through our third-party payment processors.",
-      "You authorize us to charge your payment method for all services booked through our platform.",
-      "Refunds are subject to our cancellation and refund policy outlined below.",
-    ],
-  },
-  {
-    title: "Cancellation and Refund Policy",
-    content: [
-      "Cancellations made 24+ hours before scheduled service: Full refund",
-      "Cancellations made 12-24 hours before: 50% refund",
-      "Cancellations made less than 12 hours before: No refund",
-      "Emergency cancellations may be considered on a case-by-case basis.",
-      "Service providers may also cancel bookings due to unforeseen circumstances.",
-      "Refunds are processed within 5-7 business days to the original payment method.",
-    ],
-  },
-  {
-    title: "User Responsibilities",
-    content: [
-      "Provide accurate information when booking services and creating your account.",
-      "Ensure safe access to your property for service providers.",
-      "Secure or remove valuable items before service providers arrive.",
-      "Treat service providers with respect and professionalism.",
-      "Report any issues or concerns promptly through our platform.",
-      "Comply with all applicable laws and regulations when using our services.",
-    ],
-  },
-  {
-    title: "Service Provider Terms",
-    content: [
-      "Service providers must be properly licensed, insured, and qualified to provide services.",
-      "Providers must maintain professional standards and deliver services as described.",
-      "Providers are independent contractors, not employees of MetroClap.",
-      "Providers must comply with all applicable laws and safety regulations.",
-      "We reserve the right to remove providers who violate our standards or receive poor reviews.",
-    ],
-  },
-  {
-    title: "Limitation of Liability",
-    content: [
-      "MetroClap's liability is limited to the amount paid for the specific service in question.",
-      "We are not liable for indirect, incidental, or consequential damages.",
-      "We do not guarantee the availability, quality, or timeliness of services.",
-      "Service providers are primarily responsible for any damages or issues during service delivery.",
-      "Our platform is provided 'as is' without warranties of any kind.",
-    ],
-  },
-  {
-    title: "Intellectual Property",
-    content: [
-      "All content on our platform, including text, graphics, logos, and software, is our property.",
-      "You may not reproduce, distribute, or create derivative works without our permission.",
-      "User-generated content (reviews, photos) remains your property but you grant us usage rights.",
-      "We respect intellectual property rights and will respond to valid infringement claims.",
-    ],
-  },
-  {
-    title: "Privacy and Data Protection",
-    content: [
-      "Your privacy is important to us and is governed by our Privacy Policy.",
-      "We collect and use information as described in our Privacy Policy.",
-      "You consent to the collection and use of your information as outlined.",
-      "We implement security measures to protect your personal information.",
-    ],
-  },
-  {
-    title: "Dispute Resolution",
-    content: [
-      "We encourage users to contact us first to resolve any disputes or concerns.",
-      "Disputes that cannot be resolved informally may be subject to binding arbitration.",
-      "Arbitration will be conducted according to the rules of the American Arbitration Association.",
-      "You waive the right to participate in class action lawsuits against MetroClap.",
-      "These terms are governed by the laws of the State of New York.",
-    ],
-  },
-  {
-    title: "Termination",
-    content: [
-      "Either party may terminate the agreement at any time with or without cause.",
-      "We may suspend or terminate your account for violations of these terms.",
-      "Upon termination, your right to use our services ceases immediately.",
-      "Provisions regarding liability, intellectual property, and dispute resolution survive termination.",
-    ],
-  },
-]
+  { id: "services", title: "1. SERVICES" },
+  { id: "account-creation", title: "2. ACCOUNT CREATION" },
+  { id: "user-content", title: "3. USER CONTENT" },
+  { id: "data-consent", title: "4. CONSENT TO USE DATA" },
+  { id: "bookings", title: "5. BOOKINGS" },
+  { id: "pricing", title: "6. PRICING, FEES, AND PAYMENT TERMS" },
+  { id: "customer-conduct", title: "7. CUSTOMER CONDUCT" },
+  { id: "third-party", title: "8. THIRD PARTY SERVICES" },
+  { id: "responsibilities", title: "9. YOUR RESPONSIBILITIES" },
+  { id: "intellectual-property", title: "10. OUR INTELLECTUAL PROPERTY" },
+  { id: "termination", title: "11. TERM AND TERMINATION" },
+  { id: "disclaimers", title: "12. DISCLAIMERS AND WARRANTIES" },
+  { id: "indemnity", title: "13. INDEMNITY" },
+  { id: "jurisdiction", title: "14. JURISDICTION, GOVERNING LAWS, AND DISPUTE RESOLUTION" },
+  { id: "grievance", title: "15. GRIEVANCE REDRESSAL" },
+  { id: "misc", title: "16. MISCELLANEOUS PROVISIONS" },
+].map((section) => ({
+  ...section,
+  content: fullContent[section.title],
+}));
 
 export default function TermsPage() {
-  const heroRef = useRef<HTMLElement>(null)
-  const contentRef = useRef<HTMLElement>(null)
+  const [activeSection, setActiveSection] = useState<string>(sections[0]?.id || "");
+  const sectionRefs = useRef<Map<string, HTMLElement | null>>(new Map());
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible")
+          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+            setActiveSection(entry.target.id);
           }
-        })
+        });
       },
-      { threshold: 0.1 },
-    )
+      {
+        rootMargin: "-25% 0px -50% 0px",
+        threshold: 0.5,
+      }
+    );
 
-    const refs = [heroRef, contentRef]
-    refs.forEach((ref) => {
-      if (ref.current) observer.observe(ref.current)
-    })
+    sectionRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
 
-    return () => observer.disconnect()
-  }, [])
+    return () => {
+      sectionRefs.current.forEach((ref) => {
+        if (ref) observer.unobserve(ref);
+      });
+    };
+  }, []);
 
   return (
-    <main>
-      {/* Hero Section */}
-      <section ref={heroRef} className="py-20 sm:py-28 fade-in-up">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h1 className="text-5xl sm:text-6xl font-bold text-neutral-900 mb-6">Terms & Conditions</h1>
-            <p className="text-xl text-neutral-700">
-              Please read these terms carefully before using our services. They govern your use of the MetroClap
-              platform.
+    <>
+      <style jsx global>{`
+        html {
+          scroll-behavior: smooth;
+        }
+      `}</style>
+      <main className="bg-neutral-50 text-neutral-800">
+        <header className="bg-gradient-to-b from-blue-50 via-white to-white py-24 sm:py-32">
+          <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
+            <h1 className="text-4xl font-bold tracking-tight text-neutral-900 sm:text-6xl">Terms & Conditions</h1>
+            <p className="mt-6 text-lg leading-8 text-neutral-600">
+              Your trust is important to us. Please review these terms governing your use of the MetroClap platform.
             </p>
-            <p className="text-sm text-neutral-600 mt-4">Last updated: March 1, 2024</p>
+            <p className="mt-4 text-sm text-neutral-500">Last Updated: 1 August 2025</p>
           </div>
-        </div>
-      </section>
+        </header>
 
-      {/* Content Section */}
-      <section ref={contentRef} className="py-20 sm:py-28 bg-neutral-50 fade-in-up">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-white rounded-xl shadow-lg p-8 lg:p-12">
-            <div className="prose prose-lg max-w-none">
-              <p className="text-lg text-neutral-700 mb-8">
-                These Terms and Conditions ("Terms") govern your use of the MetroClap platform and services. By using
-                our services, you agree to comply with and be bound by these terms. Please read them carefully.
-              </p>
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-2 sm:py-2">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+            <aside className="hidden lg:col-span-3 lg:block">
+              <nav className="sticky top-24">
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-neutral-500">
+                  On this page
+                </h3>
+                <ul className="space-y-1 border-l border-neutral-200">
+                  {sections.map((section) => (
+                    <li key={section.id}>
+                      <a
+                        href={`#${section.id}`}
+                        className={`-ml-px block border-l-2 py-2 pl-4 pr-3 text-sm transition-colors ${
+                          activeSection === section.id
+                            ? "border-blue-600 font-semibold text-blue-600"
+                            : "border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-700"
+                        }`}
+                      >
+                        {section.title.substring(section.title.indexOf(" ") + 1)}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </aside>
 
-              <div className="space-y-12">
-                {sections.map((section, index) => (
-                  <div key={index}>
-                    <h2 className="text-2xl font-bold text-neutral-900 mb-4">{section.title}</h2>
-                    <ul className="space-y-3">
-                      {section.content.map((item, itemIndex) => (
-                        <li key={itemIndex} className="text-neutral-700 leading-relaxed">
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+            <div className="lg:col-span-9">
+              <div className="rounded-2xl bg-white p-8 shadow-xl ring-1 ring-neutral-900/5 sm:p-12">
+                <article className="prose prose-lg max-w-none prose-neutral">
+                  <p>
+                    These terms and conditions ("Terms") govern the use of services made available on or through
+                    https://www.metroclap.in and/or the Metroclap mobile app (collectively, the "Platform", and
+                    together with the services made available on or through the Platform, the "Services"). These Terms
+                    also include our privacy policy, available at https://www.metroclap.in/privacy-policy ("Privacy
+                    Policy"), and any guidelines, additional, or supplemental terms, policies, and disclaimers made
+                    available or issued by us from time to time ("Supplemental Terms").
+                  </p>
+                  <p>
+                    The Terms constitute a binding and enforceable legal contract between Metroclap Technologies India
+                    Private Limited and you. By using the Services, you agree that you have read, understood, and are
+                    bound by, these Terms, as amended from time to time. If you do not agree to these Terms, please do
+                    not use the Services.
+                  </p>
+
+                  <div className="mt-16 space-y-16">
+                    {sections.map((section) => (
+                      <section
+                        key={section.id}
+                        id={section.id}
+                        ref={(el) => {
+                          sectionRefs.current.set(section.id, el);
+                        }}
+                        className="scroll-mt-24"
+                      >
+                        <h2 className="!mb-8 !text-2xl !font-bold !tracking-tight text-neutral-900 sm:!text-3xl">
+                          {section.title}
+                        </h2>
+                        <ul className="!mt-0 !list-none !space-y-5 !p-0">
+                          {section.content?.map((item, itemIndex) => (
+                            <li key={itemIndex} className="!p-0 flex items-start gap-x-4">
+                              <CheckCircleIcon />
+                              <span className="text-neutral-700 leading-relaxed whitespace-pre-wrap">{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    ))}
                   </div>
-                ))}
-              </div>
-
-              <div className="mt-12 p-6 bg-neutral-100 rounded-lg">
-                <h3 className="text-xl font-semibold text-neutral-900 mb-3">Questions About These Terms?</h3>
-                <p className="text-neutral-700 mb-4">
-                  If you have any questions about these Terms and Conditions, please contact us:
-                </p>
-                <div className="space-y-2 text-neutral-700">
-                  <p>Email: legal@metroclap.com</p>
-                  <p>Phone: +1 (555) 123-4567</p>
-                  <p>Address: 123 Business Ave, New York, NY 10001</p>
-                </div>
+                </article>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    </main>
-  )
+      </main>
+    </>
+  );
 }
