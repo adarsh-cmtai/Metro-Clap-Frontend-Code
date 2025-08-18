@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Service, SubService } from '@/types';
 import { useAppDispatch } from '@/app/store/hooks';
@@ -45,21 +46,29 @@ export default function ServiceDetailModal({ isOpen, onClose, service }: Service
                     </button>
                 </div>
                 <div className="p-6 max-h-[60vh] overflow-y-auto">
-                    <ul className="space-y-3">
+                    <ul className="space-y-4">
                         {service.subServices?.map((sub) => (
-                            <li key={sub._id} className="p-4 border rounded-lg flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                                <div>
+                            <li key={sub._id} className="p-4 border rounded-lg flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                                <div className="relative w-full sm:w-24 h-24 flex-shrink-0">
+                                    <Image 
+                                        src={sub.imageUrl || service.imageUrl || 'https://i.imgur.com/gSNoY2j.png'} 
+                                        alt={sub.name} 
+                                        fill
+                                        className="object-cover rounded-md"
+                                    />
+                                </div>
+                                <div className="flex-grow">
                                     <p className="font-semibold text-gray-800">{sub.name}</p>
-                                    <p className="text-sm text-gray-500 mt-1">{sub.description}</p>
+                                    {/* <p className="text-sm text-gray-500 mt-1">{sub.description}</p> */}
                                     <div className="mt-2 text-sm">
                                         <span className="text-gray-600">Duration: <span className="font-bold text-black">{sub.duration} mins</span></span>
                                     </div>
                                 </div>
-                                <div className="flex-shrink-0 flex flex-col items-end sm:items-center gap-2">
+                                <div className="flex-shrink-0 flex flex-col items-end sm:items-center gap-2 w-full sm:w-auto mt-4 sm:mt-0">
                                     <p className="font-bold text-lg text-gray-800">₹{sub.price}</p>
                                     <button
                                         onClick={() => handleAddToCart(sub)}
-                                        className="inline-flex items-center justify-center bg-red-50 text-red-600 font-semibold px-4 py-2 rounded-lg text-sm transition-colors hover:bg-red-600 hover:text-white"
+                                        className="w-full sm:w-auto inline-flex items-center justify-center bg-red-50 text-red-600 font-semibold px-4 py-2 rounded-lg text-sm transition-colors hover:bg-red-600 hover:text-white"
                                     >
                                         <ShoppingCart className="w-4 h-4 mr-2" />
                                         Add to Cart
