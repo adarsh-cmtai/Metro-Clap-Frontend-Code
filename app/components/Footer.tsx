@@ -42,16 +42,17 @@ export default function Footer() {
               <li><Link href="/contact" className="hover:text-white transition-colors">contact</Link></li>
               <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-white transition-colors">Terms of service</Link></li>
+              <li><Link href="/refund-policy" className="hover:text-white transition-colors">Refund Policy</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-white font-semibold mb-4 uppercase tracking-wider">Services</h3>
             <ul className="space-y-3 text-sm">
-              <li><Link href="/services/residential" className="hover:text-white transition-colors">Residential Cleaning Service</Link></li>
-              <li><Link href="/services/corporate" className="hover:text-white transition-colors">Corporate Cleaning Services</Link></li>
-              <li><Link href="/services/industrial" className="hover:text-white transition-colors">Industrial Cleaning Services</Link></li>
-              <li><Link href="/services/sofa" className="hover:text-white transition-colors">Sofa Cleaning Services</Link></li>
+              <li><Link href="/services" className="hover:text-white transition-colors">Residential Cleaning Service</Link></li>
+              <li><Link href="/services" className="hover:text-white transition-colors">Corporate Cleaning Services</Link></li>
+              <li><Link href="/services" className="hover:text-white transition-colors">Industrial Cleaning Services</Link></li>
+              <li><Link href="/services" className="hover:text-white transition-colors">Sofa Cleaning Services</Link></li>
             </ul>
           </div>
 
