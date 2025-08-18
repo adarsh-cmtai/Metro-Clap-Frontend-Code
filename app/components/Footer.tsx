@@ -17,13 +17,13 @@ export default function Footer() {
             </p>
             <h4 className="font-semibold text-white mt-8 mb-3">FOLLOW US</h4>
             <div className="flex space-x-4">
-              <a href="https://www.facebook.com/metroclap/" aria-label="Facebook" className="text-neutral-400 hover:text-white transition-colors">
+              <a href="https://www.facebook.com/metroclap/" aria-label="Facebook" className="text-neutral-400 hover:text-white transition-colors" target="_blank">
                 <Facebook className="w-6 h-6" />
               </a>
-              <a href="https://www.instagram.com/metroclap/" aria-label="Instagram" className="text-neutral-400 hover:text-white transition-colors">
+              <a href="https://www.instagram.com/metroclap/" aria-label="Instagram" className="text-neutral-400 hover:text-white transition-colors" target="_blank">
                 <Instagram className="w-6 h-6" />
               </a>
-              <a href="https://www.youtube.com/@metroclap5156" aria-label="YouTube" className="text-neutral-400 hover:text-white transition-colors">
+              <a href="https://www.youtube.com/@metroclap5156" aria-label="YouTube" className="text-neutral-400 hover:text-white transition-colors" target="_blank">
                 <Youtube className="w-6 h-6" />
               </a>
             </div>
