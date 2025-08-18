@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="bg-black text-neutral-400 pt-16">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-          
+
           <div>
             <Link href="/" className="mb-4 inline-block">
               <Image src="/Logo.jpg" alt="Metroclap Logo" width={150} height={35} />
@@ -17,16 +17,13 @@ export default function Footer() {
             </p>
             <h4 className="font-semibold text-white mt-8 mb-3">FOLLOW US</h4>
             <div className="flex space-x-4">
-              <a href="#" aria-label="Facebook" className="text-neutral-400 hover:text-white transition-colors">
+              <a href="https://www.facebook.com/metroclap/" aria-label="Facebook" className="text-neutral-400 hover:text-white transition-colors">
                 <Facebook className="w-6 h-6" />
               </a>
-              <a href="#" aria-label="Twitter" className="text-neutral-400 hover:text-white transition-colors">
-                <Twitter className="w-6 h-6" />
-              </a>
-              <a href="#" aria-label="Instagram" className="text-neutral-400 hover:text-white transition-colors">
+              <a href="https://www.instagram.com/metroclap/" aria-label="Instagram" className="text-neutral-400 hover:text-white transition-colors">
                 <Instagram className="w-6 h-6" />
               </a>
-              <a href="#" aria-label="YouTube" className="text-neutral-400 hover:text-white transition-colors">
+              <a href="https://www.youtube.com/@metroclap5156" aria-label="YouTube" className="text-neutral-400 hover:text-white transition-colors">
                 <Youtube className="w-6 h-6" />
               </a>
             </div>
@@ -45,7 +42,7 @@ export default function Footer() {
               <li><Link href="/refund-policy" className="hover:text-white transition-colors">Refund Policy</Link></li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-white font-semibold mb-4 uppercase tracking-wider">Services</h3>
             <ul className="space-y-3 text-sm">
@@ -58,13 +55,37 @@ export default function Footer() {
 
           <div>
             <h3 className="text-white font-semibold mb-4 uppercase tracking-wider">Reach Us</h3>
-            <ul className="space-y-3 text-sm">
-              <li>Phone:</li>
-              <li>Email:</li>
-              <li>Address:</li>
+            <ul className="space-y-3 text-sm text-gray-300">
+              <li>
+                📞{" "}
+                <a href="tel:+919325106205" className="hover:text-blue-400 transition">
+                  +91 93251 06205
+                </a>
+              </li>
+              <li>
+                ✉️{" "}
+                <a
+                  href="mailto:metroclap@gmail.com"
+                  className="hover:text-blue-400 transition"
+                >
+                  metroclap@gmail.com
+                </a>
+              </li>
+              <li>
+                📍{" "}
+                <a
+                  href="https://www.google.com/maps?q=Metroclap"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-400 transition"
+                >
+                  Address
+                </a>
+              </li>
             </ul>
           </div>
-          
+
+
         </div>
 
         <div className="border-t border-neutral-800 mt-16 py-6 text-center text-sm">
