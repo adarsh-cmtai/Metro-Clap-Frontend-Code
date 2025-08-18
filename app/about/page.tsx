@@ -5,10 +5,10 @@ import { Users, Shield, Award, Briefcase, Zap, Star } from "lucide-react"
 import Image from "next/image"
 
 const stats = [
-  { icon: Star, number: "50k+", label: "Happy Customers" },
-  { icon: Users, number: "2000+", label: "Trained Professionals" },
-  { icon: Briefcase, number: "5+", label: "Training Centers" },
-  { icon: Award, number: "25+", label: "Expert Trainers" },
+  { icon: Star, number: "10000+", label: "Active Service Professionals" },
+  { icon: Users, number: "1 Million+", label: "Consumers" },
+  { icon: Briefcase, number: "09", label: "Cities" },
+  { icon: Award, number: "1", label: "Country" },
 ]
 
 export default function AboutPage() {
