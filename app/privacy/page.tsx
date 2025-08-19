@@ -2,13 +2,12 @@
 
 import { useEffect, useRef, useState } from "react"
 
-// Ícono SVG para las listas
 const ShieldCheckIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
     fill="currentColor"
-    className="h-6 w-6 flex-shrink-0 text-blue-600"
+    className="h-6 w-6 flex-shrink-0 text-red-600"
     {...props}
   >
     <path
@@ -17,7 +16,7 @@ const ShieldCheckIcon = (props: React.SVGProps<SVGSVGElement>) => (
       clipRule="evenodd"
     />
   </svg>
-);
+)
 
 const sections = [
   {
@@ -160,37 +159,37 @@ const sections = [
       "E-mail: privacy@metroclap.in",
     ],
   },
-];
+]
 
 export default function PrivacyPage() {
-  const [activeSection, setActiveSection] = useState<string>(sections[0]?.id || "");
-  const sectionRefs = useRef<Map<string, HTMLElement | null>>(new Map());
+  const [activeSection, setActiveSection] = useState<string>(sections[0]?.id || "")
+  const sectionRefs = useRef<Map<string, HTMLElement | null>>(new Map())
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && entry.intersectionRatio > 0.2) {
-            setActiveSection(entry.target.id);
+            setActiveSection(entry.target.id)
           }
-        });
+        })
       },
       {
         rootMargin: "-20% 0px -50% 0px",
         threshold: 0.2,
       }
-    );
+    )
 
     sectionRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
+      if (ref) observer.observe(ref)
+    })
 
     return () => {
       sectionRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, []);
+        if (ref) observer.unobserve(ref)
+      })
+    }
+  }, [])
 
   return (
     <>
@@ -199,38 +198,35 @@ export default function PrivacyPage() {
           scroll-behavior: smooth;
         }
       `}</style>
-      <main className="bg-slate-50 text-slate-800">
-        <header className="bg-white py-16 sm:py-24 border-b border-slate-200">
+      <main className="bg-gray-100 text-gray-800">
+        <header className="bg-gray-900 py-20 sm:py-24">
           <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
-            <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
               Privacy Policy
             </h1>
-            <p className="mt-2 text-lg leading-8 text-slate-600">
-              Your privacy is our priority. This policy outlines our practices in
-              relation to your personal data.
+            <p className="mt-6 text-lg leading-8 text-gray-300">
+              Your privacy is our priority. This policy outlines our practices in relation to your personal data.
             </p>
-            <p className="mt-2 text-sm text-slate-500">
-              Last Updated: 1st August 2025
-            </p>
+            <p className="mt-4 text-sm text-gray-400">Last Updated: 1st August 2025</p>
           </div>
         </header>
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-2 sm:py-2">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 sm:py-20">
           <div className="lg:grid lg:grid-cols-12 lg:gap-12">
             <aside className="hidden lg:col-span-3 lg:block">
               <nav className="sticky top-24">
-                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-500">
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
                   On this page
                 </h3>
-                <ul className="space-y-1 border-l border-slate-200">
+                <ul className="space-y-1 border-l border-gray-200">
                   {sections.map((section) => (
                     <li key={section.id}>
                       <a
                         href={`#${section.id}`}
                         className={`-ml-px block border-l-2 py-2 pl-4 pr-3 text-sm transition-colors ${
                           activeSection === section.id
-                            ? "border-blue-600 font-semibold text-blue-600"
-                            : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700"
+                            ? "border-red-600 font-semibold text-red-600"
+                            : "border-transparent text-gray-600 hover:border-gray-300 hover:text-gray-900"
                         }`}
                       >
                         {section.title.substring(section.title.indexOf(" ") + 1)}
@@ -242,19 +238,13 @@ export default function PrivacyPage() {
             </aside>
 
             <div className="lg:col-span-9">
-              <div className="rounded-2xl bg-white p-8 shadow-xl ring-1 ring-slate-900/5 sm:p-12">
+              <div className="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-900/5 sm:p-12">
                 <article className="prose prose-lg max-w-none prose-slate">
                   <p>
-                    Metroclap Technologies India Pvt Ltd and its affiliates
-                    (collectively, “metroclap”, “we” or “us”) are engaged in the business of providing web-based solutions
-                    to facilitate connections between customers that seek specific
-                    services and service professionals that offer these services.
+                    Metroclap Technologies India Pvt Ltd and its affiliates (collectively, “metroclap”, “we” or “us”) are engaged in the business of providing web-based solutions to facilitate connections between customers that seek specific services and service professionals that offer these services.
                   </p>
                   <p>
-                    This Policy outlines our practices in relation to the collection,
-                    storage, usage, processing, and disclosure of personal data that
-                    you have consented to share with us when you access, use, or
-                    otherwise interact with our Platform.
+                    This Policy outlines our practices in relation to the collection, storage, usage, processing, and disclosure of personal data that you have consented to share with us when you access, use, or otherwise interact with our Platform.
                   </p>
 
                   <div className="mt-16 space-y-16">
@@ -263,23 +253,18 @@ export default function PrivacyPage() {
                         key={section.id}
                         id={section.id}
                         ref={(el) => {
-                          sectionRefs.current.set(section.id, el);
+                          sectionRefs.current.set(section.id, el)
                         }}
                         className="scroll-mt-24"
                       >
-                        <h2 className="!mb-8 !text-2xl !font-bold !tracking-tight text-slate-900 sm:!text-3xl">
+                        <h2 className="!mb-8 !text-2xl !font-bold !tracking-tight text-gray-900 sm:!text-3xl">
                           {section.title}
                         </h2>
                         <ul className="!mt-0 !list-none !space-y-6 !p-0">
                           {section.content.map((item, itemIndex) => (
-                            <li
-                              key={itemIndex}
-                              className="!p-0 flex items-start gap-x-4"
-                            >
+                            <li key={itemIndex} className="!p-0 flex items-start gap-x-4">
                               <ShieldCheckIcon />
-                              <span className="text-slate-700 leading-relaxed">
-                                {item}
-                              </span>
+                              <span className="text-gray-700 leading-relaxed">{item}</span>
                             </li>
                           ))}
                         </ul>
@@ -293,5 +278,5 @@ export default function PrivacyPage() {
         </div>
       </main>
     </>
-  );
+  )
 }
