@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { Phone, MapPin, Clock, Headset, Star, Percent } from 'lucide-react';
 
@@ -15,7 +15,7 @@ const contactInfo = [
   {
     icon: MapPin,
     title: "Visit Us",
-    text: "------------------------",
+    text: "E-111, World of Mother, jai Ganesh Vision Akurdi Pimpri Chinchwad, Pune, Maharashtra 411035",
     bgColor: "bg-purple-100/60",
     iconColor: "text-purple-600"
   },
@@ -29,7 +29,7 @@ const contactInfo = [
   {
     icon: Headset,
     title: "Customer Support",
-    text: "support@metroclap.com",
+    text: "metroclap@gmail.com",
     subtext: "Quick response guaranteed",
     bgColor: "bg-orange-100/60",
     iconColor: "text-orange-600"
@@ -84,7 +84,59 @@ const PromotionalBanner = () => (
   </section>
 );
 
+// Define a type for the submission result state
+interface SubmissionResult {
+  success: boolean;
+  message: string;
+}
+
 export default function ContactPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionResult, setSubmissionResult] = useState<SubmissionResult | null>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmissionResult(null);
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "5f9eafae-dca9-4146-9566-581c194b6ace",
+          from_name: "MetroClap Contact Form",
+          subject: "New Contact Form Submission from Website",
+          name: `${data.first_name} ${data.last_name}`,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmissionResult({ success: true, message: "Your message has been sent successfully!" });
+        (e.target as HTMLFormElement).reset();
+      } else {
+        console.error("Submission Error:", result);
+        setSubmissionResult({ success: false, message: result.message || "An error occurred. Please try again." });
+      }
+    } catch (error) {
+      console.error("Fetch Error:", error);
+      setSubmissionResult({ success: false, message: "A network error occurred. Please check your connection." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <main className="relative bg-white py-8 sm:py-8 overflow-hidden">
       <div className="absolute top-20 right-20 w-32 h-32 bg-blue-100 rounded-full filter blur-2xl opacity-60 -z-10"></div>
@@ -117,7 +169,7 @@ export default function ContactPage() {
                 </div>
               ))}
             </div>
-            <a href="tel:1234567890" className="mt-8 w-full bg-red-600 text-white font-semibold flex items-center justify-center gap-3 py-4 rounded-lg shadow-md hover:bg-red-700 transition-colors">
+            <a href="tel:93251 06205" className="mt-8 w-full bg-red-600 text-white font-semibold flex items-center justify-center gap-3 py-4 rounded-lg shadow-md hover:bg-red-700 transition-colors">
               <Phone className="w-5 h-5" />
               Call Now for Instant Booking
             </a>
@@ -125,34 +177,43 @@ export default function ContactPage() {
 
           <div className="border border-red-500 rounded-2xl p-8">
             <h3 className="text-xl font-bold text-red-600 mb-6">Send us a Message</h3>
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">First Name</label>
-                  <input type="text" className="w-full bg-gray-100 border-none rounded-md px-4 py-2.5 focus:ring-2 focus:ring-red-400"/>
+                  <label htmlFor="first_name" className="text-sm font-medium text-gray-700 mb-1 block">First Name</label>
+                  <input id="first_name" name="first_name" type="text" required className="w-full bg-gray-100 border-none rounded-md px-4 py-2.5 focus:ring-2 focus:ring-red-400"/>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">Last Name</label>
-                  <input type="text" className="w-full bg-gray-100 border-none rounded-md px-4 py-2.5 focus:ring-2 focus:ring-red-400"/>
+                  <label htmlFor="last_name" className="text-sm font-medium text-gray-700 mb-1 block">Last Name</label>
+                  <input id="last_name" name="last_name" type="text" required className="w-full bg-gray-100 border-none rounded-md px-4 py-2.5 focus:ring-2 focus:ring-red-400"/>
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">Email</label>
-                <input type="email" className="w-full bg-gray-100 border-none rounded-md px-4 py-2.5 focus:ring-2 focus:ring-red-400"/>
+                <label htmlFor="email" className="text-sm font-medium text-gray-700 mb-1 block">Email</label>
+                <input id="email" name="email" type="email" required className="w-full bg-gray-100 border-none rounded-md px-4 py-2.5 focus:ring-2 focus:ring-red-400"/>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">Phone</label>
-                <input type="tel" className="w-full bg-gray-100 border-none rounded-md px-4 py-2.5 focus:ring-2 focus:ring-red-400"/>
+                <label htmlFor="phone" className="text-sm font-medium text-gray-700 mb-1 block">Phone</label>
+                <input id="phone" name="phone" type="tel" required className="w-full bg-gray-100 border-none rounded-md px-4 py-2.5 focus:ring-2 focus:ring-red-400"/>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">Message</label>
-                <textarea rows={4} className="w-full bg-gray-100 border-none rounded-md px-4 py-2.5 focus:ring-2 focus:ring-red-400"></textarea>
+                <label htmlFor="message" className="text-sm font-medium text-gray-700 mb-1 block">Message</label>
+                <textarea id="message" name="message" rows={4} required className="w-full bg-gray-100 border-none rounded-md px-4 py-2.5 focus:ring-2 focus:ring-red-400"></textarea>
               </div>
               <div>
-                <button type="submit" className="w-full bg-red-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-red-700 transition-colors">
-                  Send Message
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-red-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-red-700 transition-colors disabled:bg-red-400 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>
               </div>
+              {submissionResult && (
+                <p className={`text-sm text-center mt-4 ${submissionResult.success ? 'text-green-600' : 'text-red-600'}`}>
+                  {submissionResult.message}
+                </p>
+              )}
             </form>
           </div>
         </div>
