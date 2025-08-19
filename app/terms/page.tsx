@@ -2,13 +2,12 @@
 
 import { useEffect, useRef, useState } from "react"
 
-// Ícono SVG para las listas
 const CheckCircleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
     fill="currentColor"
-    className="h-5 w-5 flex-shrink-0 text-blue-600"
+    className="h-5 w-5 flex-shrink-0 text-red-600"
     {...props}
   >
     <path
@@ -19,7 +18,7 @@ const CheckCircleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 )
 
-type ContentMap = Record<string, string[]>;
+type ContentMap = Record<string, string[]>
 
 const fullContent: ContentMap = {
   "1. SERVICES": [
@@ -98,7 +97,7 @@ const fullContent: ContentMap = {
     "  VI. the User Content does not and shall not violate any third-party rights; and",
     "  VII. the User Content (A) does not belong to any other person to which you do not have any right, (B) does not threaten the unity, integrity, defence, security or sovereignty of India, friendly relations with foreign states, public order, cause incitement to the commission of any cognisable offence, prevents investigation of any offence, or is insulting another nation, (C) is not defamatory, grossly harmful, blasphemous, paedophilic, invasive of another's privacy, discriminatory based on gender, ethnically objectionable, disparaging, relating to, or encouraging money laundering or gambling libellous, hateful, racist, violent, obscene, pornographic, unlawful, harmful to children, or (D) otherwise offensive, objectionable, or restricts, or inhibits, any other person from using or enjoying the Services.",
     "(d) You shall not use the Services in any manner except as expressly permitted in these Terms. Without limiting the generality of the preceding sentence, you shall not:",
-    "  (i) infringe any proprietary rights, including but not limited to copyrights, patents, trademarks, or trade secrets of any party;",
+    "  (i) infringe any proprietary rights, including but not to copyrights, patents, trademarks, or trade secrets of any party;",
     "  (ii) except as may be provided hereunder, copy, display, distribute, modify, publish, reproduce, store, transmit, post, translate, create any derivative works from or license the Services;",
     "  (iii) use the Services to transmit any data, or send or upload any material that contains viruses, Trojan horses, worms, timebombs, keystroke loggers, spyware, adware, or any other harmful programmes, or similar computer code, designed to adversely affect the operation of any computer software or hardware;",
     "  (iv) use any robot, spider, other automated device, or manual process to monitor or copy the Services or any portion thereof;",
@@ -136,7 +135,7 @@ const fullContent: ContentMap = {
     "  2. the occurrence or existence of any defect, interruption, or delays, in the operation or transmission of information to, from, or through the Services, communications failure, theft, destruction, or unauthorised access to our records, programmes, services, servers, or other infrastructure relating to the Services;",
     "  3. the failure of the Services to remain operational for any period of time; and",
     "  4. the loss of any User Content and any other data in connection with your use of the Services.",
-    "(j) In no event shall UC, its officers, directors, and employees, or its contractors, agents, licensors, partners, or suppliers, be liable to you for any direct, special, indirect, incidental, consequential, punitive, reliance, or exemplary damages (including without limitation, lost business opportunities, lost revenues or loss of anticipated profits or any other pecuniary or non-pecuniary loss or damage of any nature whatsoever, including but not limited to any abuse or breach of data), even if UC or an authorised representative had been advised of the possibility of such damages arising out of or relating to (A) these Terms, (B) the Services or the Pro Services, (C) your use or inability to use the Services or the Pro Services, or (D) any other interactions with another user of the Services.",
+    "(j) In no event shall UC, its officers, directors, and employees, or its contractors, agents, licensors, partners, or suppliers, be liable to you for any direct, special, indirect, incidental, consequential, punitive, reliance, or exemplary damages (including without limitation, lost business opportunities, lost revenues or loss of anticipated profits or any other pecuniary or non-pecuniary loss or damage of any nature whatsoever, including but not to any abuse or breach of data), even if UC or an authorised representative had been advised of the possibility of such damages arising out of or relating to (A) these Terms, (B) the Services or the Pro Services, (C) your use or inability to use the Services or the Pro Services, or (D) any other interactions with another user of the Services.",
     "(k) To the maximum extent permitted by law, our liability shall be limited to the amount of commission we receive in respect of a particular booking made on the Platform. In no event shall our total liability to you in connection with these Terms exceed INR 10,000 (Rupees Ten Thousand).",
     "(l) Nothing in these Terms will exclude or limit any warranty implied by law that it would be unlawful to exclude or limit.",
   ],
@@ -162,7 +161,7 @@ const fullContent: ContentMap = {
     "(f) Third Party Rights: No third party shall have any rights to enforce any terms contained herein.",
     "(g) Force Majeure: We shall have no liability to you if we are prevented from or delayed in performing our obligations, or from carrying on our business, by acts, events, omissions, or accidents beyond our reasonable control, including without limitation, strikes, failure of a utility service or telecommunications network, act of God, war, riot, civil commotion, malicious damage, or compliance with any law or governmental order, rule, regulation, or direction.",
   ],
-};
+}
 
 const sections = [
   { id: "services", title: "1. SERVICES" },
@@ -184,37 +183,37 @@ const sections = [
 ].map((section) => ({
   ...section,
   content: fullContent[section.title],
-}));
+}))
 
 export default function TermsPage() {
-  const [activeSection, setActiveSection] = useState<string>(sections[0]?.id || "");
-  const sectionRefs = useRef<Map<string, HTMLElement | null>>(new Map());
+  const [activeSection, setActiveSection] = useState<string>(sections[0]?.id || "")
+  const sectionRefs = useRef<Map<string, HTMLElement | null>>(new Map())
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-            setActiveSection(entry.target.id);
+            setActiveSection(entry.target.id)
           }
-        });
+        })
       },
       {
-        rootMargin: "-25% 0px -50% 0px",
+        rootMargin: "-20% 0px -50% 0px",
         threshold: 0.5,
       }
-    );
+    )
 
     sectionRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
+      if (ref) observer.observe(ref)
+    })
 
     return () => {
       sectionRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, []);
+        if (ref) observer.unobserve(ref)
+      })
+    }
+  }, [])
 
   return (
     <>
@@ -223,33 +222,35 @@ export default function TermsPage() {
           scroll-behavior: smooth;
         }
       `}</style>
-      <main className="bg-neutral-50 text-neutral-800">
-        <header className="bg-gradient-to-b from-blue-50 via-white to-white py-24 sm:py-32">
+      <main className="bg-gray-100 text-gray-800">
+        <header className="bg-gray-900 py-20 sm:py-24">
           <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
-            <h1 className="text-4xl font-bold tracking-tight text-neutral-900 sm:text-6xl">Terms & Conditions</h1>
-            <p className="mt-6 text-lg leading-8 text-neutral-600">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+              Terms & Conditions
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-gray-300">
               Your trust is important to us. Please review these terms governing your use of the MetroClap platform.
             </p>
-            <p className="mt-4 text-sm text-neutral-500">Last Updated: 1 August 2025</p>
+            <p className="mt-4 text-sm text-gray-400">Last Updated: 1 August 2025</p>
           </div>
         </header>
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-2 sm:py-2">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 sm:py-20">
           <div className="lg:grid lg:grid-cols-12 lg:gap-12">
             <aside className="hidden lg:col-span-3 lg:block">
               <nav className="sticky top-24">
-                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-neutral-500">
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
                   On this page
                 </h3>
-                <ul className="space-y-1 border-l border-neutral-200">
+                <ul className="space-y-1 border-l border-gray-200">
                   {sections.map((section) => (
                     <li key={section.id}>
                       <a
                         href={`#${section.id}`}
                         className={`-ml-px block border-l-2 py-2 pl-4 pr-3 text-sm transition-colors ${
                           activeSection === section.id
-                            ? "border-blue-600 font-semibold text-blue-600"
-                            : "border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-700"
+                            ? "border-red-600 font-semibold text-red-600"
+                            : "border-transparent text-gray-600 hover:border-gray-300 hover:text-gray-900"
                         }`}
                       >
                         {section.title.substring(section.title.indexOf(" ") + 1)}
@@ -261,8 +262,8 @@ export default function TermsPage() {
             </aside>
 
             <div className="lg:col-span-9">
-              <div className="rounded-2xl bg-white p-8 shadow-xl ring-1 ring-neutral-900/5 sm:p-12">
-                <article className="prose prose-lg max-w-none prose-neutral">
+              <div className="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-900/5 sm:p-12">
+                <article className="prose prose-lg max-w-none prose-slate">
                   <p>
                     These terms and conditions ("Terms") govern the use of services made available on or through
                     https://www.metroclap.in and/or the Metroclap mobile app (collectively, the "Platform", and
@@ -284,18 +285,18 @@ export default function TermsPage() {
                         key={section.id}
                         id={section.id}
                         ref={(el) => {
-                          sectionRefs.current.set(section.id, el);
+                          sectionRefs.current.set(section.id, el)
                         }}
                         className="scroll-mt-24"
                       >
-                        <h2 className="!mb-8 !text-2xl !font-bold !tracking-tight text-neutral-900 sm:!text-3xl">
+                        <h2 className="!mb-8 !text-2xl !font-bold !tracking-tight text-gray-900 sm:!text-3xl">
                           {section.title}
                         </h2>
-                        <ul className="!mt-0 !list-none !space-y-5 !p-0">
+                        <ul className="!mt-0 !list-none !space-y-6 !p-0">
                           {section.content?.map((item, itemIndex) => (
-                            <li key={itemIndex} className="!p-0 flex items-start gap-x-4">
+                            <li key={itemIndex} className="!p-0 flex items-start gap-x-3">
                               <CheckCircleIcon />
-                              <span className="text-neutral-700 leading-relaxed whitespace-pre-wrap">{item}</span>
+                              <span className="text-gray-700 leading-relaxed whitespace-pre-wrap">{item}</span>
                             </li>
                           ))}
                         </ul>
@@ -309,5 +310,5 @@ export default function TermsPage() {
         </div>
       </main>
     </>
-  );
+  )
 }
