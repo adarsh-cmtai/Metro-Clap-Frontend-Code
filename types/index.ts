@@ -84,13 +84,14 @@ export interface Location {
 
 
 export interface SubService {
-    _id: string;
-    name: string;
-    serviceId: string;
-    description: string;
-    price: number;
-    duration: number;
-    isActive: boolean;
+  _id: string;
+  name: string;
+  serviceId: string;
+  description: string;
+  price: number;
+  duration: number;
+  imageUrl?: string; // ✅ yeh hona chahiye
+  isActive: boolean;
 }
 
 export interface DashboardData {

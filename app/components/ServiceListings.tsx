@@ -7,11 +7,55 @@ import api from '@/lib/api';
 import ServiceDetailModal from './ServiceDetailModal';
 
 const cardStyles = [
-  { icon: Home, gradient: "from-indigo-500 to-blue-500" },
-  { icon: Sofa, gradient: "from-purple-500 to-indigo-500" },
-  { icon: Bath, gradient: "from-pink-500 to-rose-500" },
-  { icon: Wind, gradient: "from-cyan-500 to-teal-500" },
+  { 
+    icon: Home, 
+    accentColor: "indigo",
+  },
+  { 
+    icon: Sofa, 
+    accentColor: "purple",
+  },
+  { 
+    icon: Bath, 
+    accentColor: "rose",
+  },
+  { 
+    icon: Wind, 
+    accentColor: "teal",
+  },
 ];
+
+const colorVariants = {
+  indigo: {
+    iconBg: "bg-indigo-100",
+    iconText: "text-indigo-600",
+    buttonBg: "bg-indigo-500",
+    buttonHoverBg: "hover:bg-indigo-600",
+    border: "border-indigo-500",
+  },
+  purple: {
+    iconBg: "bg-purple-100",
+    iconText: "text-purple-600",
+    buttonBg: "bg-purple-500",
+    buttonHoverBg: "hover:bg-purple-600",
+    border: "border-purple-500",
+  },
+  rose: {
+    iconBg: "bg-rose-100",
+    iconText: "text-rose-600",
+    buttonBg: "bg-rose-500",
+    buttonHoverBg: "hover:bg-rose-600",
+    border: "border-rose-500",
+  },
+  teal: {
+    iconBg: "bg-teal-100",
+    iconText: "text-teal-600",
+    buttonBg: "bg-teal-500",
+    buttonHoverBg: "hover:bg-teal-600",
+    border: "border-teal-500",
+  },
+};
+
 
 export default function ServiceListings() {
   const [services, setServices] = useState<Service[]>([]);
@@ -73,29 +117,34 @@ export default function ServiceListings() {
           ) : (
             <div className="flex gap-8 overflow-x-auto pb-8 px-4 sm:px-6 lg:px-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {services.map((service, index) => {
-                const style = cardStyles[index % cardStyles.length];
+                const styleInfo = cardStyles[index % cardStyles.length];
+                const colors = colorVariants[styleInfo.accentColor as keyof typeof colorVariants];
+
                 return (
-                  <div key={service._id} className={`flex-shrink-0 w-80 md:w-96 rounded-3xl p-8 text-white relative overflow-hidden bg-gradient-to-br shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ${style.gradient}`}>
-                    <div className="relative z-10 flex flex-col h-full">
+                  <div 
+                    key={service._id} 
+                    className={`flex-shrink-0 w-80 md:w-96 bg-white border border-gray-200/80 rounded-3xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border-t-4 ${colors.border}`}
+                  >
+                    <div className="flex flex-col h-full">
                       
                       <div className="flex items-center gap-4">
-                        <div className="bg-white/10 p-3 rounded-lg backdrop-blur-sm">
-                          {React.createElement(style.icon, { className: "w-6 h-6 text-white" })}
+                        <div className={`p-3 rounded-lg ${colors.iconBg}`}>
+                          {React.createElement(styleInfo.icon, { className: `w-6 h-6 ${colors.iconText}` })}
                         </div>
                         <div>
-                          <h3 className="font-bold text-xl">{service.name}</h3>
-                          <p className="text-white/80 text-sm">{service.tagline}</p>
+                          <h3 className="font-bold text-xl text-neutral-800">{service.name}</h3>
+                          <p className="text-neutral-500 text-sm">{service.tagline}</p>
                         </div>
                       </div>
 
                       <div className="my-8 pl-1 flex-grow">
-                        <p className="font-semibold text-white/90">
-                          <span className="font-bold text-white text-3xl">₹{service.price}</span> starting
+                        <p className="font-semibold text-neutral-700">
+                          <span className="font-bold text-neutral-800 text-3xl">₹{service.price}</span> starting
                         </p>
-                        <ul className="mt-4 space-y-2 text-sm text-white/90">
+                        <ul className="mt-4 space-y-2 text-sm text-neutral-600">
                           {service.inclusions.slice(0, 3).map((feature, i) => (
                             <li key={i} className="flex items-center gap-2">
-                              <CheckCircle className="w-4 h-4 text-white/70" />
+                              <CheckCircle className="w-4 h-4 text-green-500" />
                               <span>{feature}</span>
                             </li>
                           ))}
@@ -105,14 +154,12 @@ export default function ServiceListings() {
                       <div className="mt-auto">
                         <button
                           onClick={() => handleOpenModal(service)}
-                          className="block w-full bg-white/20 text-center font-semibold py-3 rounded-lg backdrop-blur-sm transition-colors hover:bg-white/30"
+                          className={`block w-full text-white text-center font-semibold py-3 rounded-lg transition-colors ${colors.buttonBg} ${colors.buttonHoverBg}`}
                         >
                           Book Now
                         </button>
                       </div>
-
                     </div>
-                    <div className="absolute w-48 h-48 bg-white/10 rounded-full -bottom-16 -right-16 z-0"></div>
                   </div>
                 );
               })}

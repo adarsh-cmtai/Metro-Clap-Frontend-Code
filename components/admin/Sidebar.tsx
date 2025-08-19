@@ -100,7 +100,6 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         <div className="p-3 border-t border-slate-700/50">
           <div className="flex items-center justify-between w-full p-2 rounded-lg bg-slate-900/50">
             <div className="flex items-center gap-3">
-              <img className="w-10 h-10 rounded-full object-cover" src={user?.avatarUrl || `https://ui-avatars.com/api/?name=${user?.name || 'A'}`} alt="Admin" />
               <div>
                 <p className="text-sm font-semibold text-white">{user?.name || 'Admin'}</p>
                 <p className="text-xs text-slate-400">Manager</p>

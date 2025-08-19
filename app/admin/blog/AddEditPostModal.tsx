@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
 import Modal from "@/components/admin/Modal";
 import { BlogPost } from '@/types';
 import { UploadCloud, X, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
+import RichTextEditor from './RichTextEditor';
 
 interface AddEditPostModalProps {
     isOpen: boolean;
@@ -16,8 +15,6 @@ interface AddEditPostModalProps {
     onSave: (data: Partial<BlogPost>) => void;
     initialData: BlogPost | null;
 }
-
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function AddEditPostModal({ isOpen, onClose, onSave, initialData }: AddEditPostModalProps) {
     const [title, setTitle] = useState('');
@@ -31,12 +28,7 @@ export default function AddEditPostModal({ isOpen, onClose, onSave, initialData 
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
-    const [isClient, setIsClient] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     useEffect(() => {
         if (isOpen) {
@@ -93,7 +85,7 @@ export default function AddEditPostModal({ isOpen, onClose, onSave, initialData 
                 <textarea placeholder="Excerpt" value={excerpt} onChange={e => setExcerpt(e.target.value)} rows={3} className="w-full p-2 border rounded-md" />
                 <div>
                     <label className="text-sm font-medium">Content</label>
-                    {isClient && <ReactQuill theme="snow" value={content} onChange={setContent} className="bg-white" />}
+                    <RichTextEditor content={content} onChange={setContent} />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <input type="text" placeholder="Author" value={author} onChange={e => setAuthor(e.target.value)} className="w-full p-2 border rounded-md" />

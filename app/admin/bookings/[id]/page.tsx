@@ -7,9 +7,11 @@ import {
   fetchBookingDetails,
   broadcastBooking,
   initiatePayout,
+  cancelAndRefund,
 } from "@/app/store/features/admin/bookingsSlice";
 import AssignPartnerModal from "@/app/admin/bookings/AssignPartnerModal";
-import { Loader2, CheckCircle, Banknote, User, AlertCircle, MessageSquare } from "lucide-react";
+import ConfirmationModal from "@/components/admin/ConfirmationModal";
+import { Loader2, CheckCircle, Banknote, User, AlertCircle, MessageSquare, Undo2, XCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ServiceInfo {
@@ -51,9 +53,17 @@ interface Booking {
   items?: BookingItem[];
   status: string;
   bookingDate: string;
-  paymentStatus?: string;
+  paymentMethod?: 'Online' | 'COD';
+  paymentStatus?: 'Pending' | 'Paid' | 'Partially Paid' | 'Failed' | 'Refunded';
+  amountPaid?: number;
   customerId?: { name?: string; mobileNumber?: string };
   address?: string;
+  paymentDetails?: {
+      refundDetails?: {
+          refundId?: string;
+          refundDate?: string;
+      }
+  }
 }
 
 const statusColors: { [key: string]: string } = {
@@ -72,7 +82,9 @@ export default function BookingDetailsPage() {
     (state) => state.adminBookings
   );
   
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({ title: '', message: '', onConfirm: () => {} });
   const [currentItemToAssign, setCurrentItemToAssign] = useState<BookingItem | null>(null);
 
   const bookingId = params.id as string;
@@ -84,19 +96,41 @@ export default function BookingDetailsPage() {
   }, [dispatch, bookingId]);
 
   const handleBroadcast = () => {
-    dispatch(broadcastBooking(bookingId));
+    setModalContent({
+        title: 'Broadcast Booking',
+        message: 'Are you sure you want to broadcast this job to all available partners?',
+        onConfirm: () => dispatch(broadcastBooking(bookingId))
+    });
+    setIsConfirmModalOpen(true);
   };
   
   const handleOpenAssignModal = (item: BookingItem) => {
     setCurrentItemToAssign(item);
-    setIsModalOpen(true);
+    setIsAssignModalOpen(true);
   };
 
   const handlePayout = (itemId: string) => {
-    if (window.confirm("Are you sure you want to process this payout? This action cannot be undone.")) {
-        dispatch(initiatePayout({ bookingId, itemId }));
-    }
+    setModalContent({
+        title: 'Confirm Payout',
+        message: 'This will initiate the payout to the partner. This action cannot be undone.',
+        onConfirm: () => dispatch(initiatePayout({ bookingId, itemId }))
+    });
+    setIsConfirmModalOpen(true);
   };
+
+  const handleCancelAndRefund = () => {
+      const booking = singleBooking as Booking;
+      let message: React.ReactNode = 'Are you sure you want to cancel this booking?';
+      if (booking.amountPaid && booking.amountPaid > 0) {
+          message = <>This will cancel the booking and refund <strong className="font-bold">₹{booking.amountPaid}</strong> to the customer. Are you sure?</>;
+      }
+      setModalContent({
+          title: 'Cancel Booking',
+          message: message,
+          onConfirm: () => dispatch(cancelAndRefund(bookingId))
+      });
+      setIsConfirmModalOpen(true);
+  }
 
   if (status === "loading" || !singleBooking) {
     return (
@@ -108,18 +142,26 @@ export default function BookingDetailsPage() {
 
   const booking = singleBooking as Booking;
   const itemReadyForPayout = booking.items?.find(item => item.status === 'CompletedByPartner' && item.payoutStatus === 'Pending');
+  const canBeCancelled = booking.status !== 'Cancelled' && booking.status !== 'Completed';
 
   return (
     <TooltipProvider>
       {currentItemToAssign && (
         <AssignPartnerModal 
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          isOpen={isAssignModalOpen}
+          onClose={() => setIsAssignModalOpen(false)}
           bookingId={booking._id}
           item={currentItemToAssign}
           bookingAddress={booking.address || ''}
         />
       )}
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        title={modalContent.title}
+        message={modalContent.message}
+        onConfirm={modalContent.onConfirm}
+      />
       <div className="space-y-6">
         <div className="flex justify-between items-start">
           <div>
@@ -137,9 +179,15 @@ export default function BookingDetailsPage() {
                 Broadcast to Partners
               </button>
             )}
-            <button className="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600">
-              Cancel Booking
-            </button>
+            {canBeCancelled && (
+              <button 
+                onClick={handleCancelAndRefund}
+                className={`flex items-center text-white px-4 py-2 rounded-lg font-semibold transition-colors ${booking.amountPaid && booking.amountPaid > 0 ? 'bg-orange-500 hover:bg-orange-600' : 'bg-red-500 hover:bg-red-600'}`}
+              >
+                {booking.amountPaid && booking.amountPaid > 0 ? <Undo2 className="w-4 h-4 mr-2"/> : <XCircle className="w-4 h-4 mr-2"/>}
+                {booking.amountPaid && booking.amountPaid > 0 ? 'Cancel & Refund' : 'Cancel Booking'}
+              </button>
+            )}
           </div>
         </div>
 
@@ -211,9 +259,19 @@ export default function BookingDetailsPage() {
                 <h3 className="font-semibold text-lg mb-4 border-b pb-2">
                   Booking & Payment Summary
                 </h3>
-                 <p><strong>Overall Status:</strong> {booking.status}</p>
-                 <p><strong>Date:</strong> {new Date(booking.bookingDate).toLocaleString()}</p>
-                 <p><strong>Payment Status:</strong> {booking.paymentStatus || "N/A"}</p>
+                <div className="grid grid-cols-2 gap-4">
+                    <p><strong>Overall Status:</strong> {booking.status}</p>
+                    <p><strong>Date:</strong> {new Date(booking.bookingDate).toLocaleString()}</p>
+                    <p><strong>Payment Method:</strong> {booking.paymentMethod || 'N/A'}</p>
+                    <p><strong>Payment Status:</strong> {booking.paymentStatus || 'N/A'}</p>
+                    <p className="text-green-600"><strong>Amount Paid:</strong> ₹{booking.amountPaid || 0}</p>
+                    {booking.paymentStatus === 'Refunded' && (
+                        <p className="text-blue-600"><strong>Amount Refunded:</strong> ₹{booking.amountPaid || 0}</p>
+                    )}
+                </div>
+                 {booking.paymentStatus === 'Refunded' && booking.paymentDetails?.refundDetails?.refundId && (
+                    <p className="text-sm text-gray-500 mt-2">Refund ID: {booking.paymentDetails.refundDetails.refundId}</p>
+                 )}
               </div>
 
             <div className="bg-white p-6 rounded-lg shadow-sm">
