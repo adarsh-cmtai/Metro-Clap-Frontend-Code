@@ -79,7 +79,8 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-blue-400 transition"
                 >
-                  Address
+                  E-111, World of Mother, jai Ganesh Vision Akurdi
+                   Pimpri Chinchwad, Pune, Maharashtra 411035
                 </a>
               </li>
             </ul>
