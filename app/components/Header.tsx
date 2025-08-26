@@ -18,6 +18,7 @@ export default function Header() {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isServicesModalOpen, setIsServicesModalOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isAuthDropdownOpen, setIsAuthDropdownOpen] = useState(false);
 
   const dispatch = useAppDispatch();
   const pathname = usePathname();
@@ -161,9 +162,34 @@ export default function Header() {
                     )}
                   </>
                 ) : (
-                  <button onClick={() => setIsLoginModalOpen(true)} className="p-2">
-                    <User className="w-6 h-6 text-red-500" />
-                  </button>
+                  <>
+                    <button
+                      onClick={() => setIsAuthDropdownOpen(!isAuthDropdownOpen)}
+                      className="p-2"
+                    >
+                      <User className="w-6 h-6 text-red-500" />
+                    </button>
+                    {isAuthDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg py-1 z-50">
+                        <button
+                          onClick={() => {
+                            setIsLoginModalOpen(true);
+                            setIsAuthDropdownOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Login / Signup 
+                        </button>
+                        <Link
+                          href="/partner/signup"
+                          onClick={() => setIsAuthDropdownOpen(false)}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Signup as Partner
+                        </Link>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -199,14 +225,7 @@ export default function Header() {
                 >
                   {selectedLocation ? `Location: ${selectedLocation.city}` : "Select Location"}
                 </button>
-                {!isOnServicesPage && (
-                  <Link
-                    href="/partner"
-                    className="border border-red-500 text-red-500 px-4 py-2 rounded-lg font-medium text-center"
-                  >
-                    Become a Partner
-                  </Link>
-                )}
+                
                 {user ? (
                    <>
                     {profileLinks.map(link => (
@@ -222,7 +241,24 @@ export default function Header() {
                     <button onClick={handleLogout} className="text-neutral-700 hover:text-red-500 text-left">Logout</button>
                    </>
                 ) : (
-                   <button onClick={handleMobileLogin} className="text-neutral-700 hover:text-red-500 text-left">Login / Signup</button>
+                   <>
+                     <button onClick={handleMobileLogin} className="text-neutral-700 hover:text-red-500 text-left">Login / Signup</button>
+                     <Link
+                       href="/partner"
+                       onClick={() => setIsMenuOpen(false)}
+                       className="text-neutral-700 hover:text-red-500"
+                     >
+                       Signup as Partner
+                     </Link>
+                   </>
+                )}
+                {!isOnServicesPage && (
+                  <Link
+                    href="/partner"
+                    className="border border-red-500 text-red-500 px-4 py-2 rounded-lg font-medium text-center"
+                  >
+                    Become a Partner
+                  </Link>
                 )}
               </nav>
             </div>
