@@ -19,6 +19,7 @@ export default function Header() {
   const [isServicesModalOpen, setIsServicesModalOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isAuthDropdownOpen, setIsAuthDropdownOpen] = useState(false);
+  const [hasCheckedInitialLocation, setHasCheckedInitialLocation] = useState(false);
 
   const dispatch = useAppDispatch();
   const pathname = usePathname();
@@ -44,6 +45,13 @@ export default function Header() {
         console.error("Could not load cart from storage:", error);
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!selectedLocation && !hasCheckedInitialLocation) {
+      setIsLocationModalOpen(true);
+      setHasCheckedInitialLocation(true);
+    }
+  }, [selectedLocation, hasCheckedInitialLocation]);
 
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
