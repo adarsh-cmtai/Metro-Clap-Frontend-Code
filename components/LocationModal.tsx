@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks"
 import { fetchLocations, setSelectedLocation } from "@/app/store/features/location/locationSlice"
 import { X, MapPin, Search, LoaderCircle, AlertTriangle } from "lucide-react"
@@ -22,13 +22,19 @@ export default function LocationModal({ onClose }: LocationModalProps) {
     }
   }, [status, dispatch]);
 
+  const uniqueLocations = useMemo(() => {
+    if (!locations) return [];
+    return Array.from(new Map(locations.map(location => [location.city, location])).values());
+  }, [locations]);
+
+
   const handleLocationSelect = (location: Location) => {
     dispatch(setSelectedLocation(location));
-    toast.success(`Location set to ${location.name}`);
+    toast.success(`Location set to ${location.city}`);
     onClose();
   };
 
-  const filteredLocations = locations.filter(location =>
+  const filteredLocations = uniqueLocations.filter(location =>
     location.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
     location.pincode.toString().includes(searchTerm)
   );
@@ -91,7 +97,6 @@ export default function LocationModal({ onClose }: LocationModalProps) {
                         <MapPin className="w-6 h-6 text-red-500 mr-4 flex-shrink-0" />
                         <div>
                           <span className="text-neutral-800 font-semibold">{location.city}</span>
-                          <p className="text-sm text-neutral-500">{location.pincode}</p>
                         </div>
                       </button>
                     </li>
