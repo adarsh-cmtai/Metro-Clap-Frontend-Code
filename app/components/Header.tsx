@@ -98,7 +98,7 @@ export default function Header() {
               >
                 <MapPin className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" />
                 <span className="truncate text-sm text-neutral-800">
-                  {selectedLocation ? `${selectedLocation.city} - ${selectedLocation.pincode}` : "Select Location"}
+                  {selectedLocation ? `${selectedLocation.city}` : "Select Location"}
                 </span>
               </button>
 
