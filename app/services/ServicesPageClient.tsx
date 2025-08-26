@@ -64,7 +64,7 @@ const ServiceModal = ({ service, isOpen, onClose, onAddToCart }: { service: Serv
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {service.subServices.map(option => (
                                     <button key={option._id} onClick={() => setSelectedSubService(option)} className={`border rounded-lg text-left transition-all duration-200 ${selectedSubService?._id === option._id ? 'border-red-500 bg-red-50 ring-2 ring-red-300' : 'border-gray-300 hover:border-red-400 hover:bg-gray-50'}`}>
-                                        <img src={option.imageUrl || service.imageUrl || 'https://i.imgur.com/gSNoY2j.png'} alt={option.name} className="w-full h-32 object-cover rounded-t-lg" />
+                                        <img src={(option as any).imageUrl || service.imageUrl || 'https://i.imgur.com/gSNoY2j.png'} alt={option.name} className="w-full h-32 object-cover rounded-t-lg" />
                                         <div className="p-3">
                                             <p className="font-bold text-gray-800">{option.name}</p>
                                             <p className="font-semibold text-red-600">₹{option.price}</p>
@@ -94,7 +94,7 @@ const ServiceModal = ({ service, isOpen, onClose, onAddToCart }: { service: Serv
 export default function ServicesPageClient() {
     const dispatch = useAppDispatch();
     const searchParams = useSearchParams();
-    
+
     const [categories, setCategories] = useState<CategoryWithServices[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -102,7 +102,7 @@ export default function ServicesPageClient() {
     const [selectedService, setSelectedService] = useState<Service | null>(null);
     const [showCheckout, setShowCheckout] = useState(false);
     const [hasMounted, setHasMounted] = useState(false);
-    
+
     const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const selectedLocation = useAppSelector((state) => state.location.selectedLocation);
     const cart = useAppSelector((state) => state.cart.items);
@@ -150,7 +150,7 @@ export default function ServicesPageClient() {
     const handleQuantityChange = (subServiceId: string, delta: number) => {
         dispatch(updateQuantity({ subServiceId, delta }));
     };
-    
+
     const handleCategoryClick = (categoryId: string) => {
         categoryRefs.current[categoryId]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
@@ -244,7 +244,7 @@ export default function ServicesPageClient() {
                 <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
                     <header className="py-8">
                         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">Our Services</h1>
-                        <p className="text-gray-500 mt-2 text-lg">⭐ 4.9 (51m ratings) | 5m+ bookings nationwide</p>
+                        {/* <p className="text-gray-500 mt-2 text-lg">⭐ 4.9 (51m ratings) | 5m+ bookings nationwide</p> */}
                     </header>
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -277,7 +277,7 @@ export default function ServicesPageClient() {
                                                     <img src={service.imageUrl || 'https://i.imgur.com/gSNoY2j.png'} alt={service.name} className="w-full sm:w-40 h-32 object-cover rounded-xl flex-shrink-0" />
                                                     <div className="flex-grow w-full">
                                                         <h4 className="text-xl font-bold">{service.name}</h4>
-                                                        <p className="text-sm text-gray-500 my-1">⭐ 4.8 (197k reviews) • 🕒 {service.duration}</p>
+                                                        <p className="text-sm text-gray-500 my-1">🕒 {service.duration}</p>
                                                         <ul className="list-none p-0 my-4 space-y-2">
                                                             {service.inclusions.slice(0, 2).map((task, i) => <li key={i} className="flex items-center text-sm text-gray-600"><CheckIcon />{task}</li>)}
                                                         </ul>
@@ -296,7 +296,7 @@ export default function ServicesPageClient() {
                         </main>
 
                         <aside className="lg:col-span-3 lg:sticky top-8 h-fit space-y-6">
-                           {renderCart()}
+                            {renderCart()}
                         </aside>
                     </div>
                 </div>
