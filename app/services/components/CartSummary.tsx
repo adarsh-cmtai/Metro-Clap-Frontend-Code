@@ -5,13 +5,10 @@ interface CartSummaryProps {
     cart: CartItem[];
     onQuantityChange: (serviceId: string, delta: number) => void;
     onProceed: () => void;
-    isFirstTimeUser: boolean;
 }
 
-export function CartSummary({ cart, onQuantityChange, onProceed, isFirstTimeUser }: CartSummaryProps) {
-    const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-    const discount = isFirstTimeUser ? 100 : 0;
-    const totalAmount = subtotal - discount > 0 ? subtotal - discount : 0;
+export function CartSummary({ cart, onQuantityChange, onProceed }: CartSummaryProps) {
+    const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
     return (
         <div className="space-y-6">
@@ -38,17 +35,7 @@ export function CartSummary({ cart, onQuantityChange, onProceed, isFirstTimeUser
             <div className="rounded-lg bg-white p-4 border border-gray-200 text-sm">
                 <h4 className="font-semibold mb-3">Payment Summary</h4>
                 <div className="space-y-2 text-gray-600">
-                    <div className="flex justify-between">
-                        <span>Subtotal</span>
-                        <span>₹{subtotal.toLocaleString('en-IN')}</span>
-                    </div>
-                    {isFirstTimeUser && (
-                        <div className="flex justify-between text-green-600">
-                            <span>First Booking Discount</span>
-                            <span>- ₹{discount.toLocaleString('en-IN')}</span>
-                        </div>
-                    )}
-                    <div className="flex justify-between font-bold text-base text-gray-800 pt-2 border-t mt-2">
+                    <div className="flex justify-between font-bold text-base text-gray-800">
                         <span>To Pay</span>
                         <span>₹{totalAmount.toLocaleString('en-IN')}</span>
                     </div>
