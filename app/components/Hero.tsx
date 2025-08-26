@@ -78,7 +78,7 @@ export default function Hero() {
           <div className="grid lg:grid-cols-2 items-center gap-12 lg:gap-20">
             <div className="text-center lg:text-left">
               <h1 className="text-4xl md:text-5xl font-bold text-neutral-800 leading-tight">
-                Trusted Home Services, Delivered at Your{" "}
+                Trusted Home Services Delivered at Your{" "}
                 <span className="text-[#E51D2A] font-extrabold">Doorstep</span>
               </h1>
               <p className="mt-6 text-xl text-neutral-600">
