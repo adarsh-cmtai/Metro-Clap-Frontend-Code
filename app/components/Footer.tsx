@@ -32,7 +32,7 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4 uppercase tracking-wider">Company</h3>
             <ul className="space-y-3 text-sm">
-              <li><Link href="/home" className="hover:text-white transition-colors">Home</Link></li>
+              <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
               <li><Link href="/about" className="hover:text-white transition-colors">About us</Link></li>
               <li><Link href="/blog" className="hover:text-white transition-colors">Blogs</Link></li>
               <li><Link href="/careers" className="hover:text-white transition-colors">careers</Link></li>
