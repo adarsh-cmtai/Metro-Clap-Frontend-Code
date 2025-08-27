@@ -10,7 +10,7 @@ export default function Footer() {
 
           <div>
             <Link href="/" className="mb-4 inline-block">
-              <Image src="/Logo.jpg" alt="Metroclap Logo" width={150} height={35} />
+              <Image src="/Logo.png" alt="Metroclap Logo" width={150} height={35} />
             </Link>
             <p className="text-sm leading-relaxed max-w-xs">
               Premium cleaning services that transform your space. Professional, reliable, and eco-friendly solutions for your home and office.
