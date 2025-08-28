@@ -62,17 +62,37 @@ const ServiceModal = ({ service, isOpen, onClose, onAddToCart }: { service: Serv
                         <div>
                             <h3 className="font-semibold mb-3 text-lg">Select Service Type</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
-                                {service.subServices.map(option => (
-                                    <button key={option._id} onClick={() => setSelectedSubService(option)} className={`border rounded-lg text-left transition-all duration-200 ${selectedSubService?._id === option._id ? 'border-red-500 bg-red-50 ring-2 ring-red-300' : 'border-gray-300 hover:border-red-400 hover:bg-gray-50'}`}>
-                                        <img src={(option as any).imageUrl || service.imageUrl || 'https://i.imgur.com/gSNoY2j.png'} alt={option.name} className="w-full h-28 object-cover rounded-t-lg" />
+                                {service.subServices.map((option) => (
+                                    <button
+                                        key={option._id}
+                                        onClick={() => setSelectedSubService(option)}
+                                        className={`border rounded-lg text-left transition-all duration-200 overflow-hidden ${selectedSubService?._id === option._id
+                                                ? "border-red-500 bg-red-50 ring-2 ring-red-300"
+                                                : "border-gray-300 hover:border-red-400 hover:bg-gray-50"
+                                            }`}
+                                    >
+                                        <img
+                                            src={
+                                                (option as any).imageUrl ||
+                                                service.imageUrl ||
+                                                "https://i.imgur.com/gSNoY2j.png"
+                                            }
+                                            alt={option.name}
+                                            className="w-full h-28 object-cover rounded-t-lg"
+                                        />
                                         <div className="p-3">
-                                            <p className="font-bold text-gray-800 text-base">{option.name}</p>
-                                            <p className="font-semibold text-red-600 text-sm">₹{option.price}</p>
+                                            <p className="font-bold text-gray-800 text-base line-clamp-2">
+                                                {option.name}
+                                            </p>
+                                            <p className="font-semibold text-red-600 text-sm mt-1">
+                                                ₹{option.price}
+                                            </p>
                                         </div>
                                     </button>
                                 ))}
                             </div>
                         </div>
+
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="p-4 bg-green-50 border border-green-200 rounded-lg"> <h3 className="font-semibold text-green-800 mb-3">What's Included?</h3> <ul className="space-y-2 text-sm text-gray-700"> {service.inclusions.map((item, i) => <li key={i} className="flex items-center"><CheckIcon />{item}</li>)} </ul> </div>
