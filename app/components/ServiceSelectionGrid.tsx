@@ -2,37 +2,46 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
-  Home, Sparkles, Sofa, Bath, Bug, Layers, Armchair, Factory, Wind, Refrigerator, Bed, 
-  CookingPot, Package, Gem, Briefcase, PaintRoller, ShieldCheck, Sun, Scissors, Loader2
+  Sparkles,
+  Loader2,
+  Home, // Assuming you might want specific icons later, keeping some for reference
+  Sofa,
+  Bath,
+  Bug,
+  Lightbulb,
+  Wrench
 } from "lucide-react";
 import { Service } from "@/types";
 import api from "@/lib/api";
 
-const serviceVisuals: { [key: string]: { icon: React.ElementType, bgColor: string } } = {
-  "Home Deep Cleaning": { icon: Home, bgColor: "bg-blue-100/60" },
-  "Sofa Shampooing": { icon: Sofa, bgColor: "bg-purple-100/60" },
-  "Bathroom Cleaning": { icon: Bath, bgColor: "bg-cyan-100/60" },
-  "Pest Control": { icon: Bug, bgColor: "bg-rose-100/60" },
-  "Carpet Shampooing": { icon: Layers, bgColor: "bg-green-100/60" },
-  "Dining Table Chairs": { icon: Armchair, bgColor: "bg-gray-100/80" },
-  "Chimney Cleaning": { icon: Factory, bgColor: "bg-blue-100/60" },
-  "Window Cleaning": { icon: Wind, bgColor: "bg-purple-100/60" },
-  "Fridge Deep Cleaning": { icon: Refrigerator, bgColor: "bg-rose-100/60" },
-  "Mattress Cleaning": { icon: Bed, bgColor: "bg-yellow-100/60" },
-  "Kitchen Cleaning": { icon: CookingPot, bgColor: "bg-rose-100/60" },
-  "Combo Offer": { icon: Package, bgColor: "bg-cyan-100/60" },
-  "Marble / Floor Polishing": { icon: Gem, bgColor: "bg-rose-100/60" },
-  "Office Cleaning": { icon: Briefcase, bgColor: "bg-gray-100/80" },
-  "Home Painting": { icon: PaintRoller, bgColor: "bg-purple-100/60" },
-  "Disinfection Services": { icon: ShieldCheck, bgColor: "bg-green-100/60" },
-  "Curtain Steam Cleaning": { icon: Scissors, bgColor: "bg-purple-100/60" },
-  "Exterior Cleaning": { icon: Sun, bgColor: "bg-yellow-100/60" },
-  "Default": { icon: Sparkles, bgColor: "bg-gray-100/80" }
+// Enhanced service visuals for a more vibrant and distinct look
+const serviceVisuals: { [key: string]: { bgColor: string } } = {
+  "Home Deep Cleaning": { bgColor: "bg-blue-50" },
+  "Sofa Shampooing": { bgColor: "bg-purple-50" },
+  "Bathroom Cleaning": { bgColor: "bg-cyan-50" },
+  "Pest Control": { bgColor: "bg-rose-50" },
+  "Carpet Shampooing": { bgColor: "bg-green-50" },
+  "Dining Table Chairs": { bgColor: "bg-yellow-50" },
+  "Chimney Cleaning": { bgColor: "bg-orange-50" },
+  "Window Cleaning": { bgColor: "bg-teal-50" },
+  "Fridge Deep Cleaning": { bgColor: "bg-red-50" },
+  "Mattress Cleaning": { bgColor: "bg-lime-50" },
+  "Kitchen Cleaning": { bgColor: "bg-pink-50" },
+  "Combo Offer": { bgColor: "bg-indigo-50" },
+  "Marble / Floor Polishing": { bgColor: "bg-amber-50" },
+  "Office Cleaning": { bgColor: "bg-gray-50" },
+  "Home Painting": { bgColor: "bg-blue-50" },
+  "Disinfection Services": { bgColor: "bg-green-50" },
+  "Curtain Steam Cleaning": { bgColor: "bg-purple-50" },
+  "Exterior Cleaning": { bgColor: "bg-yellow-50" },
+  "Default": { bgColor: "bg-gray-50" }
 };
 
 export default function ServiceSelectionGrid() {
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<Service[]>([]
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,50 +59,89 @@ export default function ServiceSelectionGrid() {
   }, []);
 
   return (
-    <section className="relative bg-white py-10 sm:py-10 overflow-hidden">
-        <div className="absolute top-10 left-40 w-40 h-40 bg-pink-100 rounded-full filter blur-xl opacity-60 -z-10"></div>
-        <div className="absolute top-20 right-40 w-40 h-40 bg-blue-100 rounded-full filter blur-xl opacity-60 -z-10"></div>
+    <section className="relative bg-white py-12 sm:py-16 overflow-hidden">
+      {/* Background blobs for a soft, modern feel */}
+      <div className="absolute top-0 left-0 w-64 h-64 bg-red-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob -z-10"></div>
+      <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 -z-10"></div>
+      <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 -z-10"></div>
 
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <div className="inline-block border border-red-200 text-red-600 px-4 py-1 rounded-full text-sm font-medium mb-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16 sm:mb-20">
+          <span className="inline-flex items-center gap-2 rounded-full bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 tracking-wide">
+            <Sparkles className="h-4 w-4 text-red-500" />
             Complete Cleaning Solutions
-          </div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-neutral-800">
-            Professional Services
-            <br/>
-            <span className="text-red-600">At Your Doorstep</span>
+          </span>
+          <h2 className="mt-8 text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
+            Our Professional Services
+            <br className="hidden md:inline" />
+            <span className="text-[#E51D2A]">At Your Doorstep</span>
           </h2>
-          <p className="max-w-2xl mx-auto mt-4 text-neutral-500">
-            From deep cleaning to specialized services, we offer comprehensive solutions for all your cleaning needs
+          <p className="max-w-3xl mx-auto mt-6 text-lg text-gray-600">
+           From deep cleaning to specialized services, we offer comprehensive solutions for all your cleaning needs.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 sm:gap-8">
           {loading ? (
-            <div className="col-span-full flex justify-center items-center h-48">
-              <Loader2 className="w-10 h-10 animate-spin text-red-500" />
+            <div className="col-span-full flex flex-col items-center justify-center h-64 bg-gray-50 rounded-xl shadow-inner">
+              <Loader2 className="w-12 h-12 animate-spin text-[#E51D2A] mb-4" />
+              <p className="text-gray-600 text-lg font-medium">Loading Services...</p>
             </div>
           ) : (
-            services.slice(0, 20).map((service) => {
+            services.slice(0, 24).map((service) => { // Increased slice to show more if available
               const visuals = serviceVisuals[service.name] || serviceVisuals["Default"];
               return (
                 <Link
                   href={`/services?categoryId=${service.category._id}`}
                   key={service._id}
-                  className={`rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-transform duration-300 ease-out hover:-translate-y-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${visuals.bgColor}`}
+                  className={`group relative flex flex-col items-center justify-center p-5 rounded-2xl shadow-sm border border-transparent transition-all duration-300 ease-out hover:shadow-lg hover:border-[#E51D2A] hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-[#E51D2A] ${visuals.bgColor}`}
                   role="button"
+                  aria-label={`View details for ${service.name}`}
                 >
-                  <div className="bg-white w-20 h-14 rounded-xl shadow-md flex items-center justify-center mb-4">
-                    {React.createElement(visuals.icon, { className: "w-7 h-7 text-neutral-500" })}
+                  <div className="relative bg-white w-24 h-24 sm:w-28 sm:h-28 rounded-full shadow-lg flex items-center justify-center mb-4 overflow-hidden transform group-hover:scale-105 transition-transform duration-300">
+                    <Image
+                      src={service.imageUrl || "/placeholder-service.jpg"} // Use a more descriptive placeholder
+                      alt={service.name}
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Optimize image loading
+                    />
                   </div>
-                  <p className="text-neutral-700 text-sm font-medium text-center">{service.name}</p>
+                  <p className="text-gray-800 text-base sm:text-lg font-semibold text-center leading-snug group-hover:text-[#E51D2A] transition-colors duration-300">
+                    {service.name}
+                  </p>
                 </Link>
               );
             })
           )}
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes blob {
+          0% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+          100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+      `}</style>
     </section>
-  )
+  );
 }
