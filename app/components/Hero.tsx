@@ -3,71 +3,98 @@
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Phone, Loader2 } from "lucide-react"
-import { Service } from "@/types"
+import { Phone, Loader2, Sparkles, Home, Sofa, Bath, Bug, Layers } from "lucide-react"
+import { Service, CategoryWithServices } from "@/types"
 import api from "@/lib/api"
-import SubServiceSelectionModal from "./SubServiceSelectionModal"
+import ServicesModal from "./ServicesModal"
+import SubServiceAddToCartModal from "./SubServiceAddToCartModal"
+
+const categoryVisuals: { [key: string]: { icon: React.ElementType, bgColor: string } } = {
+  "Cleaning": { icon: Home, bgColor: "bg-blue-50" },
+  "Electrician, Plumber & Carpenter": { icon: Sparkles, bgColor: "bg-purple-50" },
+  "Sofa Cleaning": { icon: Sofa, bgColor: "bg-pink-50" },
+  "Pest Control": { icon: Bug, bgColor: "bg-rose-50" },
+  "Industrial Cleaning Services": { icon: Layers, bgColor: "bg-green-50" },
+  "Default": { icon: Sparkles, bgColor: "bg-gray-50" }
+};
 
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const [services, setServices] = useState<Service[]>([])
-  const [loading, setLoading] = useState(true)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedService, setSelectedService] = useState<Service | null>(null)
+  const sectionRef = useRef<HTMLElement>(null);
+  const [categories, setCategories] = useState<CategoryWithServices[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [isServicesModalOpen, setIsServicesModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryWithServices | null>(null);
+
+  const [isSubServiceModalOpen, setIsSubServiceModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchData = async () => {
       try {
-        const { data } = await api.get("/services")
-        setServices(data)
+        const { data } = await api.get("/services/by-category");
+        setCategories(data);
       } catch (error) {
-        console.error("Failed to fetch services", error)
+        console.error("Failed to fetch categories and services", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchServices()
-  }, [])
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("visible")
+            entry.target.classList.add("visible");
           }
-        })
+        });
       },
       { threshold: 0.1 }
-    )
+    );
 
-    const currentRef = sectionRef.current
+    const currentRef = sectionRef.current;
     if (currentRef) {
-      observer.observe(currentRef)
+      observer.observe(currentRef);
     }
 
     return () => {
       if (currentRef) {
-        observer.unobserve(currentRef)
+        observer.unobserve(currentRef);
       }
-    }
-  }, [])
+    };
+  }, []);
 
-  const handleServiceClick = (service: Service) => {
-    setSelectedService(service)
-    setIsModalOpen(true)
-  }
+  const handleCategoryClick = (category: CategoryWithServices) => {
+    setSelectedCategory(category);
+    setIsServicesModalOpen(true);
+  };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedService(null)
-  }
+  const handleServiceSelect = (service: Service) => {
+    setSelectedService(service);
+    setIsServicesModalOpen(false);
+    setIsSubServiceModalOpen(true);
+  };
+
+  const handleCloseSubServiceModal = () => {
+    setIsSubServiceModalOpen(false);
+    setSelectedService(null);
+  };
 
   return (
     <>
-      <SubServiceSelectionModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
+      <ServicesModal
+        isOpen={isServicesModalOpen}
+        onClose={() => setIsServicesModalOpen(false)}
+        categoryName={selectedCategory?.name || ''}
+        services={selectedCategory?.services || []}
+        onServiceSelect={handleServiceSelect}
+      />
+      <SubServiceAddToCartModal
+        isOpen={isSubServiceModalOpen}
+        onClose={handleCloseSubServiceModal}
         service={selectedService}
       />
       <section
@@ -85,34 +112,32 @@ export default function Hero() {
                 What are you looking for?
               </p>
 
-              <div className="grid grid-cols-2 gap-5 mt-8 max-w-md mx-auto lg:mx-0">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 mt-8 max-w-lg mx-auto lg:mx-0">
                 {loading ? (
-                  <div className="col-span-2 flex justify-center items-center h-64">
+                  <div className="col-span-full flex justify-center items-center h-48">
                     <Loader2 className="w-10 h-10 animate-spin text-[#E51D2A]" />
                   </div>
                 ) : (
-                  services.slice(0, 4).map((service) => (
-                    <button
-                      key={service._id}
-                      onClick={() => handleServiceClick(service)}
-                      className="group p-5 rounded-2xl border border-gray-200 shadow-sm text-center transition-all duration-300 hover:shadow-lg hover:border-red-300 hover:-translate-y-1.5 bg-white"
-                    >
-                      <div className="relative h-16 w-16 mx-auto mb-4">
-                        <Image
-                          src={service.imageUrl || "/placeholder.png"}
-                          alt={`${service.name} icon`}
-                          fill
-                          className="object-contain"
-                          loading="lazy"
-                        />
-                      </div>
-                      <p className="font-semibold text-gray-700 text-base transition-colors group-hover:text-[#E51D2A]">
-                        {service.name}
-                      </p>
-                    </button>
-                  ))
+                  categories.slice(0, 6).map((category) => {
+                    const visuals = categoryVisuals[category.name] || categoryVisuals["Default"];
+                    return (
+                      <button
+                        key={category._id}
+                        onClick={() => handleCategoryClick(category)}
+                        className={`group p-5 rounded-2xl border border-gray-200 shadow-sm text-center transition-all duration-300 hover:shadow-lg hover:border-red-300 hover:-translate-y-1.5 ${visuals.bgColor}`}
+                      >
+                        {/* <div className="relative h-16 w-16 mx-auto mb-4 flex items-center justify-center">
+                          <visuals.icon className="w-8 h-8 text-neutral-600 group-hover:text-red-600 transition-colors" />
+                        </div> */}
+                        <p className="font-semibold text-gray-700 text-base transition-colors group-hover:text-[#E51D2A]">
+                          {category.name}
+                        </p>
+                      </button>
+                    );
+                  })
                 )}
               </div>
+
 
               <div className="mt-10 flex justify-center lg:justify-start">
                 <Link
@@ -126,54 +151,6 @@ export default function Hero() {
             </div>
 
             <div className="relative hidden lg:block">
-              <div className="absolute -top-8 -right-2 w-20 h-20 -z-10">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="100"
-                  height="100"
-                  viewBox="0 0 100 100"
-                  fill="none"
-                >
-                  <circle
-                    opacity="0.19"
-                    cx="50"
-                    cy="50"
-                    r="50"
-                    fill="#E02229"
-                    fillOpacity="0.77"
-                  />
-                </svg>
-              </div>
-              <div className="absolute -bottom-10 -left-10 w-24 h-24 -z-10">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="100"
-                  height="100"
-                  viewBox="0 0 100 100"
-                  fill="none"
-                >
-                  <circle
-                    opacity="0.11"
-                    cx="50"
-                    cy="50"
-                    r="50"
-                    fill="#5AEB00"
-                    fillOpacity="0.96"
-                  />
-                </svg>
-              </div>
-              <div className="absolute -bottom-8 right-12 w-20 h-20 -z-10">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="100"
-                  height="100"
-                  viewBox="0 0 100 100"
-                  fill="none"
-                >
-                  <circle opacity="0.15" cx="50" cy="50" r="50" fill="#007BFF" />
-                </svg>
-              </div>
-
               <div className="grid grid-flow-col-dense grid-rows-2 gap-4 h-[500px]">
                 <div className="relative rounded-2xl overflow-hidden shadow-lg">
                   <Image
@@ -205,5 +182,5 @@ export default function Hero() {
         </div>
       </section>
     </>
-  )
+  );
 }
