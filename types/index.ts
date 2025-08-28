@@ -78,7 +78,7 @@ export interface Location {
     name: string;
     city: string;
     state: string;
-    pincode: string;
+    pincodes: string[];
     isActive: boolean;
 }
 
@@ -90,7 +90,7 @@ export interface SubService {
   description: string;
   price: number;
   duration: number;
-  imageUrl?: string; // ✅ yeh hona chahiye
+  imageUrl?: string;
   isActive: boolean;
 }
 
