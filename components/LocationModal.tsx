@@ -24,7 +24,14 @@ export default function LocationModal({ onClose }: LocationModalProps) {
 
   const uniqueLocations = useMemo(() => {
     if (!locations) return [];
-    return Array.from(new Map(locations.map(location => [location.city, location])).values());
+    const cities = new Set();
+    return locations.filter(location => {
+        if(cities.has(location.city)){
+            return false;
+        }
+        cities.add(location.city);
+        return true;
+    });
   }, [locations]);
 
 
