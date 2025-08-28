@@ -80,7 +80,7 @@ export default function Header() {
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-8">
               <Link href="/">
-                <img src="/Logo.jpg" alt="Metroclap Logo" className="h-12 w-auto" />
+                <img src="/Logo.png" alt="Metroclap Logo" className="h-12 w-auto" />
               </Link>
               {!isOnServicesPage && (
                 <nav className="hidden md:flex items-center space-x-8">
