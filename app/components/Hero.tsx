@@ -118,7 +118,7 @@ export default function Hero() {
                     <Loader2 className="w-10 h-10 animate-spin text-[#E51D2A]" />
                   </div>
                 ) : (
-                  categories.slice(0, 6).map((category) => {
+                  categories.slice(0, 9).map((category) => {
                     const visuals = categoryVisuals[category.name] || categoryVisuals["Default"];
                     return (
                       <button
