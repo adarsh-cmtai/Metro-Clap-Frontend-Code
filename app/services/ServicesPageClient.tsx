@@ -8,7 +8,7 @@ import api from '@/lib/api';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { addToCart, updateQuantity } from '@/app/store/features/cart/cartSlice';
-
+import { Check } from "lucide-react";
 const CheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="text-green-600 mr-2 flex-shrink-0"> <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" /> </svg>);
 const ChevronDownIcon = ({ isOpen }: { isOpen: boolean }) => (<svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 transition-transform duration-300 ${isOpen ? 'transform rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /> </svg>);
 
@@ -67,8 +67,8 @@ const ServiceModal = ({ service, isOpen, onClose, onAddToCart }: { service: Serv
                                         key={option._id}
                                         onClick={() => setSelectedSubService(option)}
                                         className={`border rounded-lg text-left transition-all duration-200 overflow-hidden ${selectedSubService?._id === option._id
-                                                ? "border-red-500 bg-red-50 ring-2 ring-red-300"
-                                                : "border-gray-300 hover:border-red-400 hover:bg-gray-50"
+                                            ? "border-red-500 bg-red-50 ring-2 ring-red-300"
+                                            : "border-gray-300 hover:border-red-400 hover:bg-gray-50"
                                             }`}
                                     >
                                         <img
@@ -96,8 +96,17 @@ const ServiceModal = ({ service, isOpen, onClose, onAddToCart }: { service: Serv
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="p-4 bg-green-50 border border-green-200 rounded-lg"> <h3 className="font-semibold text-green-800 mb-3">What's Included?</h3> <ul className="space-y-2 text-sm text-gray-700"> {service.inclusions.map((item, i) => <li key={i} className="flex items-center"><CheckIcon />{item}</li>)} </ul> </div>
-                        <div className="p-4 bg-red-50 border border-red-200 rounded-lg"> <h3 className="font-semibold text-red-800 mb-3">What's Excluded?</h3> <ul className="space-y-2 text-sm text-gray-700"> {service.exclusions.map((item, i) => <li key={i} className="flex items-center"><CheckIcon />{item}</li>)} </ul> </div>
-                    </div>
+                        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <h3 className="font-semibold text-red-800 mb-3">What's Excluded?</h3>
+                            <ul className="space-y-2 text-sm text-gray-700">
+                                {service.exclusions.map((item, i) => (
+                                    <li key={i} className="flex items-center">
+                                        <Check className="w-4 h-4 text-red-600 mr-2" />
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>                    </div>
                     <div> <h3 className="font-semibold mb-2 text-lg">🕒 Duration</h3> <p className="text-gray-600">{service.duration}</p> </div>
                     {service.howItWorks && service.howItWorks.length > 0 && <div> <h3 className="font-semibold mb-4 text-lg">🔦 How It Works</h3> <ol className="space-y-4"> {service.howItWorks.map((step, index) => (<li key={index} className="flex items-start"> <span className="flex-shrink-0 mr-4 mt-1 h-8 w-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold">{index + 1}</span> <div><strong className="block text-red-600">{step.title}</strong><p className="text-gray-600">{step.description}</p></div> </li>))} </ol> </div>}
                     {service.faqs && service.faqs.length > 0 && <div className="rounded-lg border border-gray-200 bg-white"> <AccordionItem id="faqs" title="❓ Frequently Asked Questions"> <div className="space-y-4"> {service.faqs.map((faq, i) => (<div key={i}><p className="font-semibold text-gray-800">{faq.question}</p><p className="text-gray-600 whitespace-pre-line">{faq.answer}</p></div>))} </div> </AccordionItem> </div>}
