@@ -33,14 +33,6 @@ const locationSlice = createSlice({
         }
       }
     },
-    loadSelectedLocationFromStorage: (state) => {
-       if (typeof window !== 'undefined') {
-        const savedLocation = localStorage.getItem('selectedLocation');
-        if (savedLocation) {
-          state.selectedLocation = JSON.parse(savedLocation);
-        }
-      }
-    }
   },
   extraReducers: (builder) => {
     builder
@@ -57,5 +49,5 @@ const locationSlice = createSlice({
   },
 });
 
-export const { setSelectedLocation, loadSelectedLocationFromStorage } = locationSlice.actions;
+export const { setSelectedLocation } = locationSlice.actions;
 export default locationSlice.reducer;
