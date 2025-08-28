@@ -51,7 +51,7 @@ const ServiceModal = ({ service, isOpen, onClose, onAddToCart }: { service: Serv
     const priceToShow = selectedSubService?.price ?? service?.price ?? 0;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 p-4" onClick={onClose}>
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[95vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
                 <header className="p-5 border-b sticky top-0 bg-white rounded-t-2xl z-10">
                     <h2 className="text-2xl font-bold text-red-700">{service.name}</h2>
@@ -61,13 +61,13 @@ const ServiceModal = ({ service, isOpen, onClose, onAddToCart }: { service: Serv
                     {service.subServices && service.subServices.length > 0 && (
                         <div>
                             <h3 className="font-semibold mb-3 text-lg">Select Service Type</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
                                 {service.subServices.map(option => (
                                     <button key={option._id} onClick={() => setSelectedSubService(option)} className={`border rounded-lg text-left transition-all duration-200 ${selectedSubService?._id === option._id ? 'border-red-500 bg-red-50 ring-2 ring-red-300' : 'border-gray-300 hover:border-red-400 hover:bg-gray-50'}`}>
-                                        <img src={(option as any).imageUrl || service.imageUrl || 'https://i.imgur.com/gSNoY2j.png'} alt={option.name} className="w-full h-32 object-cover rounded-t-lg" />
+                                        <img src={(option as any).imageUrl || service.imageUrl || 'https://i.imgur.com/gSNoY2j.png'} alt={option.name} className="w-full h-28 object-cover rounded-t-lg" />
                                         <div className="p-3">
-                                            <p className="font-bold text-gray-800">{option.name}</p>
-                                            <p className="font-semibold text-red-600">₹{option.price}</p>
+                                            <p className="font-bold text-gray-800 text-base">{option.name}</p>
+                                            <p className="font-semibold text-red-600 text-sm">₹{option.price}</p>
                                         </div>
                                     </button>
                                 ))}
