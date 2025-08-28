@@ -9,7 +9,6 @@ import LoginModal from '@/components/LoginModal';
 import LocationModal from '@/components/LocationModal';
 import ServicesModal from '@/components/ServicesModal';
 import { logout } from "@/app/store/features/auth/authSlice";
-import { loadSelectedLocationFromStorage } from "@/app/store/features/location/locationSlice";
 import { setCartFromStorage } from "@/app/store/features/cart/cartSlice";
 
 export default function Header() {
@@ -19,8 +18,7 @@ export default function Header() {
   const [isServicesModalOpen, setIsServicesModalOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isAuthDropdownOpen, setIsAuthDropdownOpen] = useState(false);
-  const [hasCheckedInitialLocation, setHasCheckedInitialLocation] = useState(false);
-
+  
   const dispatch = useAppDispatch();
   const pathname = usePathname();
   const user = useAppSelector((state) => state.auth.user);
@@ -30,7 +28,6 @@ export default function Header() {
   const isOnServicesPage = pathname === '/services';
 
   useEffect(() => {
-    dispatch(loadSelectedLocationFromStorage());
     try {
         const localCartData = localStorage.getItem('metroclap_cart');
         if (localCartData) {
@@ -45,13 +42,6 @@ export default function Header() {
         console.error("Could not load cart from storage:", error);
     }
   }, [dispatch]);
-
-  useEffect(() => {
-    if (!selectedLocation && !hasCheckedInitialLocation) {
-      setIsLocationModalOpen(true);
-      setHasCheckedInitialLocation(true);
-    }
-  }, [selectedLocation, hasCheckedInitialLocation]);
 
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -90,7 +80,7 @@ export default function Header() {
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-8">
               <Link href="/">
-                <img src="/Logo.png" alt="Metroclap Logo" className="h-12 w-auto" />
+                <img src="/Logo.jpg" alt="Metroclap Logo" className="h-12 w-auto" />
               </Link>
               {!isOnServicesPage && (
                 <nav className="hidden md:flex items-center space-x-8">
