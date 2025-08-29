@@ -9,6 +9,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { addToCart, updateQuantity } from '@/app/store/features/cart/cartSlice';
 import { Check } from "lucide-react";
+
 const CheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="text-green-600 mr-2 flex-shrink-0"> <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" /> </svg>);
 const ChevronDownIcon = ({ isOpen }: { isOpen: boolean }) => (<svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 transition-transform duration-300 ${isOpen ? 'transform rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /> </svg>);
 
@@ -273,11 +274,14 @@ export default function ServicesPageClient() {
                 <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
                     <header className="py-8">
                         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">Our Services</h1>
-                        {/* <p className="text-gray-500 mt-2 text-lg">⭐ 4.9 (51m ratings) | 5m+ bookings nationwide</p> */}
                     </header>
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                        <aside className="lg:col-span-3 lg:sticky top-8 h-fit space-y-6">
+                        <aside className="lg:col-span-3 lg:sticky top-8 h-fit space-y-6 order-1 lg:order-3">
+                            {renderCart()}
+                        </aside>
+
+                        <aside className="lg:col-span-3 lg:sticky top-8 h-fit space-y-6 order-2 lg:order-1">
                             <div className="border border-gray-200/80 rounded-2xl p-6 bg-white shadow-sm">
                                 <h3 className="font-bold mb-4 text-gray-900 text-lg">Categories</h3>
                                 <div className="space-y-1">
@@ -290,7 +294,7 @@ export default function ServicesPageClient() {
                             </div>
                         </aside>
 
-                        <main className="lg:col-span-6 space-y-12">
+                        <main className="lg:col-span-6 space-y-12 order-3 lg:order-2">
                             {loading && <div className="text-center p-20 font-semibold text-gray-500">Loading Services...</div>}
                             {error && <div className="text-center p-20 text-red-600 bg-red-50 rounded-lg">{error}</div>}
                             {!loading && !error && categories.map(category => (
@@ -323,10 +327,6 @@ export default function ServicesPageClient() {
                             ))}
                             {!loading && categories.filter(c => c.services && c.services.length > 0).length === 0 && <div className="text-center p-20 font-semibold text-gray-500 bg-white rounded-2xl">No services found for the selected location.</div>}
                         </main>
-
-                        <aside className="lg:col-span-3 lg:sticky top-8 h-fit space-y-6">
-                            {renderCart()}
-                        </aside>
                     </div>
                 </div>
             </div>
